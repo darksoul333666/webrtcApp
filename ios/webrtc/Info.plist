@@ -35,6 +35,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos acceder a tu camara</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos acceder a tu microfono</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>
