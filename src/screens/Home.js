@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-
+import Apple from '../../services/auth-services/AppleAuthentication'
 const HomeScreen = ({
     params,
 }) => (
     <View>
-        <Text>HomeScreen</Text>
+        <Apple/>
     </View>
 );
 
