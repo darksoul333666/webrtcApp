@@ -226,10 +226,10 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            storeFile file('webrtc-keystore')
+            storePassword 'webrtc'
+            keyAlias 'webrtc'
+            keyPassword 'webrtc'
         }
     }
     buildTypes {

@@ -23,6 +23,17 @@ const componentName = ({
         })
        
     }
+    const LogOut = () => {
+        return new Promise(async(resolve,reject) => {
+          try {
+            // await  GoogleSignin.signOut();
+            resolve({isLogouted:true})
+          } catch (error) {
+            reject(error)
+          }
+    
+        })
+      }
 
     return(
         <AppleButton
