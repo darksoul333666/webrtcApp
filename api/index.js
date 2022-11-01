@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CacheUtil } from './../utils/cache';
-export const URL_API = 'http://192.168.1.70:4000/';
+export const URL_API = 'http://192.168.0.4:4000/';
 import messaging from '@react-native-firebase/messaging';
 
 async function config(URL) {

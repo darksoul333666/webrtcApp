@@ -123,7 +123,7 @@ const ConnectionP2P = ({ params}) => {
     const listenerOffer = async() => {
         let token = await messaging().getToken();
         messaging().onMessage(async(message)=>{
-
+            console.log("tipoooo",message.data.type);
             if(message.data.type === 'offer'){
                 try {
                     // Recibimos la oferta y la seteamos
@@ -138,17 +138,19 @@ const ConnectionP2P = ({ params}) => {
                     console.log(answerDescription)
                     let token = await messaging().getToken();
                     if(token !== 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
-                        await (API()).
+                         (await API()).
                         post(ROUTES.SEND_ANSWER, JSON.stringify({answer:answerDescription, tokenFirebase:token}))
                         then(
                             res=>{
                                 console.log(res);
                             }
-                        )
+                        ).catch(error =>{
+                            console.log(error);
+                        })
                     }
                 
                 } catch( err ) {
-                    console.log("ERROR al setear oferta")
+                    console.log("ERROR al setear oferta", err)
                 };
             }
         })
