@@ -30,8 +30,7 @@ const App = () => {
   useEffect(()=>{
     console.log(token)
   },[token])
-  let routeName = token === null ? 'Login' : 'Home';
-  console.log(routeName);
+  let routeName = token === null ? 'Call' : 'Home';
   return (
     <SafeAreaProvider>
        <NavigationContainer>

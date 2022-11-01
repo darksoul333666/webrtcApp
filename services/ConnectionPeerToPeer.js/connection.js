@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+
 import {
-    ScreenCapturePickerView,
     RTCPeerConnection,
     RTCIceCandidate,
     RTCSessionDescription,
     RTCView,
     MediaStream,
-    MediaStreamTrack,
     mediaDevices,
-    registerGlobals
 } from 'react-native-webrtc';
-
+import { API, ROUTES } from '../../api';
 const ConnectionP2P = ({ params}) => {
     
     let mediaConstraints = {
@@ -36,28 +36,155 @@ const ConnectionP2P = ({ params}) => {
         }
     };
     
-
-    useEffect(()=>{
-        getMedia()
-    },[])
-    useEffect(()=>{
-       console.log("valor",localMediaStream)
-    },[localMediaStream])
     const [localMediaStream, setLocalMediaStream] = useState(null);
+    const [remoteMediaStream, setRemoteMediaStream] = useState(null);
+    const [tokenFirebase, setTokenFirebase] = useState('');
     let  peerConnection = new RTCPeerConnection( peerConstraints );
     let  datachannel;
 
+    useEffect(()=>{
+        const getMedia = async () => {
+            try {
+            const mediaStream = await   mediaDevices.getUserMedia(mediaConstraints);
+            setLocalMediaStream(mediaStream);
+            const remote = new MediaStream();
+            setRemoteMediaStream(remote);
     
-     const getMedia = async () => {
+            // mediaStream.getTracks().forEach(track => {
+            //     peerConnection.getLocalStreams()[0].addTrack(track);
+            //   });
+            let token = await messaging().getToken();
+            setTokenFirebase(token);
+            createOffer()
+
+            } catch( err ) {
+                console.log("ERROR",err)
+            };
+        }
+        getMedia()
+    },[])
+
+    useEffect(()=>{
+        if(localMediaStream !== null){
+            createPeerConnection()
+            console.log(localMediaStream.toURL());
+            // peerConnection.ontrack = (event) => {
+            //     event.streams[0].getTracks().forEach((track) => {
+            //         localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
+                    
+
+            //     });
+            //   };
+        }
+    },[localMediaStream]);
+
+    const createOffer = async() => {
         try {
-            const mediaStream = await mediaDevices.getUserMedia( mediaConstraints );
-                setLocalMediaStream(mediaStream);
-                createPeerConnection()
+            const offerDescription = await peerConnection.createOffer( sessionConstraints );
+            await peerConnection.setLocalDescription( offerDescription );
+
+            let token = await messaging().getToken();
+            if(token === 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
+                 (await API()).
+                post(ROUTES.SEND_OFFER, JSON.stringify({offer:JSON.stringify(offerDescription), tokenFirebase:token})).
+                then(
+                    res=>{
+                    }
+                ).catch(
+                    error=>{
+                        console.log("axios",JSON.stringify(error));
+                    }
+                )
+            }
+
         } catch( err ) {
-            console.log("ERROR",err)
+            console.log("error al crear oferta", err);
         };
+    };
+
+    useEffect(()=>{
+    const listenerAnswer = async() => { 
+        messaging().onMessage(async(message)=>{
+            if(message.data.type === 'answer'){
+                try {
+                    const remoteDesc = new RTCSessionDescription(message.data.data);
+                    await peerConnection.setRemoteDescription(remoteDesc);
+
+                } catch (error) {
+                    console.log("ERROR al setear respuesta")
+                }
+            }
+        })
     }
+    listenerAnswer()
+    },[])
+
+    useEffect(()=>{
+    const listenerOffer = async() => {
+        let token = await messaging().getToken();
+        messaging().onMessage(async(message)=>{
+
+            if(message.data.type === 'offer'){
+                try {
+                    // Recibimos la oferta y la seteamos
+                    console.log("recibimos oferta");
+                    const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
+                    await peerConnection.setRemoteDescription( offerDescription );
+                
+                    const answerDescription = await peerConnection.createAnswer( sessionConstraints );
+                    await peerConnection.setLocalDescription( answerDescription );
+
+                    //Envio mi respuesta al servidor
+                    console.log(answerDescription)
+                    let token = await messaging().getToken();
+                    if(token !== 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
+                        await (API()).
+                        post(ROUTES.SEND_ANSWER, JSON.stringify({answer:answerDescription, tokenFirebase:token}))
+                        then(
+                            res=>{
+                                console.log(res);
+                            }
+                        )
+                    }
+                
+                } catch( err ) {
+                    console.log("ERROR al setear oferta")
+                };
+            }
+        })
+    }
+     listenerOffer();
+    },[])
+
     
+    
+    // const startWebcam = async () => {
+    //     pc.current = new RTCPeerConnection(servers);
+    //     const local = await mediaDevices.getUserMedia({
+    //       video: true,
+    //       audio: true,
+    //     });
+    //     pc.current.addStream(local);
+    //     setLocalStream(local);
+    
+        
+    
+    //     // Push tracks from local stream to peer connection
+    //     local.getTracks().forEach(track => {
+    //       pc.current.getLocalStreams()[0].addTrack(track);
+    //     });
+    
+    //     // Pull tracks from peer connection, add to remote video stream
+    //     pc.current.ontrack = event => {
+    //       event.streams[0].getTracks().forEach(track => {
+    //         remote.addTrack(track);
+    //       });
+    //     };
+    
+    //     pc.current.onaddstream = event => {
+    //       setRemoteStream(event.stream);
+    //     };
+    //   };
     
     const destroyMedia = () => {
         localMediaStream.getTracks().map(
@@ -85,47 +212,50 @@ const ConnectionP2P = ({ params}) => {
     peerConnection.close();
     peerConnection = null;
     }
-
     const createDataChanel = () => {
     datachannel = peerConnection.createDataChannel( 'my_chanel_webrtcapp' );
     datachannel.addEventListener( 'open', event => {} );
     datachannel.addEventListener( 'close', event => {} );
     datachannel.addEventListener( 'message', message => {} );
-    createOffer()
     }
-    const createOffer = async() => {
-        try {
-            const offerDescription = await peerConnection.createOffer( sessionConstraints );
-            await peerConnection.setLocalDescription( offerDescription );
-            createAnswer()
-            // Send the offerDescription to the other participant.
-        } catch( err ) {
-            // Handle Errors
-        };
-    }
-
-const createAnswer = async() => {
-    try {
-        // Use the received offerDescription
-        const offerDescription = new RTCSessionDescription( offerDescription );
-        await peerConnection.setRemoteDescription( offerDescription );
-    
-        const answerDescription = await peerConnection.createAnswer( sessionConstraints );
-        await peerConnection.setLocalDescription( answerDescription );
-    
-        // Send the answerDescription back as a response to the offerDescription.
-    } catch( err ) {
-        // Handle Errors
-    };
-}
+  
+    // const createAnswer = async() => {
+    //     try {
+    //         // Use the received offerDescription
+    //         const offerDescription = new RTCSessionDescription( offerDescription );
+    //         await peerConnection.setRemoteDescription( offerDescription );
+        
+    //         const answerDescription = await peerConnection.createAnswer( sessionConstraints );
+    //         await peerConnection.setLocalDescription( answerDescription );
+        
+    //         // Send the answerDescription back as a response to the offerDescription.
+    //     } catch( err ) {
+    //         // Handle Errors
+    //     };
+    //     peerConnection.addEventListener( 'datachannel', event => {
+    //         let datachannel = event.channel;
+        
+    //         // Now you've got the datachannel.
+    //         // You can hookup and use the same events as above ^
+    //     } );
     return(
-   (  (localMediaStream !== null) && 
-   <RTCView
+   (  (localMediaStream) && 
+   <View style={{...StyleSheet.objectFit, flex:1}} >
+     <RTCView
 	mirror={true}
+    style={{flex: 1,}}
 	objectFit={'cover'}
 	streamURL={localMediaStream.toURL()}
-	zOrder={10}
-    />)
+    />
+        <TextInput
+        onChangeText={()=>{}}
+        value={tokenFirebase}
+        placeholder="useless placeholder"
+      />
+   </View>
+   
+
+  )
     )
 }
 

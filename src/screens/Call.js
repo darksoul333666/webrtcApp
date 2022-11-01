@@ -11,16 +11,8 @@ useEffect(()=>{
 },[])
 
     return(
-        <View style={{width:"70%", display:'flex', justifyContent:'center', alignSelf:'center'}}>
-        <Pressable radius={12}
-         style={styles.buttonCall}
-          onLongPress={()=>{
-            getMedia()
-        }}>
-        <Text>I'm pressable!</Text>
-        </Pressable>
+      
         <ConnectionP2P/>
-        </View>
     )
 }
 
