@@ -106,12 +106,13 @@ const ConnectionP2P = ({ params}) => {
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
             if(message.data.type === 'answer'){
+                console.log("respuests", message.data.data);
                 try {
                     const remoteDesc = new RTCSessionDescription(message.data.data);
                     await peerConnection.setRemoteDescription(remoteDesc);
 
                 } catch (error) {
-                    console.log("ERROR al setear respuesta")
+                    console.log("ERROR al setear respuesta", error)
                 }
             }
         })
@@ -123,7 +124,7 @@ const ConnectionP2P = ({ params}) => {
     const listenerOffer = async() => {
         let token = await messaging().getToken();
         messaging().onMessage(async(message)=>{
-            console.log("tipoooo",message.data.type);
+            console.log("offer",message.data.data);
             if(message.data.type === 'offer'){
                 try {
                     // Recibimos la oferta y la seteamos
