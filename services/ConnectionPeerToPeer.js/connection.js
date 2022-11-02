@@ -63,7 +63,6 @@ const ConnectionP2P = ({ params}) => {
         const createOfferCall = async () =>{
             if(localMediaStream !== null){
                 createPeerConnection()
-                console.log(localMediaStream.toURL());
                 peerConnection.ontrack = (event) => {
                     event.streams[0].getTracks().forEach((track) => {
                         localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
@@ -130,12 +129,9 @@ const ConnectionP2P = ({ params}) => {
             if(message.data.type === 'offer'){
                 try {
 
-                    if(peerConnection.localDescription == null){
-                        const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
-                        await peerConnection.setRemoteDescription( offerDescription );
-                    }
-                    
-                
+                    const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
+                    await peerConnection.setRemoteDescription( offerDescription );
+                                    
                     const answerDescription = await peerConnection.createAnswer( sessionConstraints );
                     await peerConnection.setLocalDescription( answerDescription );
                    
