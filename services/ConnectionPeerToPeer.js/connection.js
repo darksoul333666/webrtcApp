@@ -52,15 +52,6 @@ const ConnectionP2P = ({ params}) => {
             let videoTrack =  mediaStream.getVideoTracks()[ 0 ];
 		        videoTrack.enabled = false;
             setLocalMediaStream(mediaStream);
-            
-            // mediaStream.getTracks().forEach(track => {
-            //     peerConnection.getLocalStreams()[0].addTrack(track);
-            //   });
-            let token = await messaging().getToken();
-            setTokenFirebase(token);
-            if(token === 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS')
-            {createOffer()}
-
             } catch( err ) {
                 console.log("ERROR",err)
             };
@@ -69,29 +60,36 @@ const ConnectionP2P = ({ params}) => {
     },[])
 
     useEffect(()=>{
-        if(localMediaStream !== null){
-            createPeerConnection()
-            console.log(localMediaStream.toURL());
-            peerConnection.ontrack = (event) => {
-                event.streams[0].getTracks().forEach((track) => {
-                    localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
-                    
-                });
-              };
+        const createOfferCall = async () =>{
+            if(localMediaStream !== null){
+                createPeerConnection()
+                console.log(localMediaStream.toURL());
+                peerConnection.ontrack = (event) => {
+                    event.streams[0].getTracks().forEach((track) => {
+                        localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
+                        
+                    });
+                  };
+                  let token = await messaging().getToken();
+                  setTokenFirebase(token);
+                  if(token === 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS')
+                  {createOffer()}
+            }
         }
+        createOfferCall()
     },[localMediaStream]);
 
     const createOffer = async() => {
+        console.log("enviando oferta");
         try {
             const offerDescription = await peerConnection.createOffer( sessionConstraints );
             await peerConnection.setLocalDescription( offerDescription );
             let token = await messaging().getToken();
                  (await API()).
-                post(ROUTES.SEND_OFFER, JSON.stringify({offer:(offerDescription), tokenFirebase:token})).
+                post(ROUTES.SEND_OFFER, JSON.stringify({offer:offerDescription, tokenFirebase:token})).
                 then(
                     res=>{
                         Alert.alert("oferta enviada")
-
                     }
                 ).catch(
                     error=>{
@@ -109,6 +107,8 @@ const ConnectionP2P = ({ params}) => {
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
             if(message.data.type === 'answer'){
+                console.log(message.data.data)
+
                 try {
                     const remoteDesc = new RTCSessionDescription(JSON.parse(message.data.data));
                     await peerConnection.setRemoteDescription(remoteDesc);
@@ -129,8 +129,12 @@ const ConnectionP2P = ({ params}) => {
 
             if(message.data.type === 'offer'){
                 try {
-                    const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
-                    await peerConnection.setRemoteDescription( offerDescription );
+
+                    if(peerConnection.localDescription == null){
+                        const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
+                        await peerConnection.setRemoteDescription( offerDescription );
+                    }
+                    
                 
                     const answerDescription = await peerConnection.createAnswer( sessionConstraints );
                     await peerConnection.setLocalDescription( answerDescription );
