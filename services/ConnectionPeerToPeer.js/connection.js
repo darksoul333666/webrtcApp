@@ -36,6 +36,8 @@ const ConnectionP2P = ({ params}) => {
             VoiceActivityDetection: true
         }
     };
+    let remoteCandidates = [];
+
     
     const [localMediaStream, setLocalMediaStream] = useState(null);
     const [remoteMediaStream, setRemoteMediaStream] = useState(null);
@@ -83,8 +85,6 @@ const ConnectionP2P = ({ params}) => {
         try {
             const offerDescription = await peerConnection.createOffer( sessionConstraints );
             await peerConnection.setLocalDescription( offerDescription );
-            console.log("tipo de dato",typeof offerDescription)
-
             let token = await messaging().getToken();
                  (await API()).
                 post(ROUTES.SEND_OFFER, JSON.stringify({offer:(offerDescription), tokenFirebase:token})).
@@ -108,12 +108,6 @@ const ConnectionP2P = ({ params}) => {
     useEffect(()=>{
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
-
-            if(message.data.type === 'answer'){
-                console.log("tipo de data", JSON.stringify(message.data.data));
-
-            }
-
             if(message.data.type === 'answer'){
                 try {
                     const remoteDesc = new RTCSessionDescription(JSON.parse(message.data.data));
@@ -135,14 +129,13 @@ const ConnectionP2P = ({ params}) => {
 
             if(message.data.type === 'offer'){
                 try {
-                    // Recibimos la oferta y la seteamos
-                    console.log("recibimos oferta");
                     const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
                     await peerConnection.setRemoteDescription( offerDescription );
                 
                     const answerDescription = await peerConnection.createAnswer( sessionConstraints );
                     await peerConnection.setLocalDescription( answerDescription );
-
+                   
+                    processCandidates()
                     //Envio mi respuesta al servidor
                     let token = await messaging().getToken();
                     if(token !== 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
@@ -213,7 +206,10 @@ const ConnectionP2P = ({ params}) => {
     
     const createPeerConnection = () => {
     peerConnection.addEventListener( 'connectionstatechange', event => {} );
-    peerConnection.addEventListener( 'icecandidate', event => {} );
+    peerConnection.addEventListener( 'icecandidate', event => {
+        if ( !event.candidate ) { return; };
+        handleRemoteCandidate(event.candidate)
+    } );
     peerConnection.addEventListener( 'icecandidateerror', event => {} );
     peerConnection.addEventListener( 'iceconnectionstatechange', event => {} );
     peerConnection.addEventListener( 'icegatheringstatechange', event => {} );
@@ -235,26 +231,23 @@ const ConnectionP2P = ({ params}) => {
     datachannel.addEventListener( 'close', event => {} );
     datachannel.addEventListener( 'message', message => {} );
     }
-  
-    // const createAnswer = async() => {
-    //     try {
-    //         // Use the received offerDescription
-    //         const offerDescription = new RTCSessionDescription( offerDescription );
-    //         await peerConnection.setRemoteDescription( offerDescription );
-        
-    //         const answerDescription = await peerConnection.createAnswer( sessionConstraints );
-    //         await peerConnection.setLocalDescription( answerDescription );
-        
-    //         // Send the answerDescription back as a response to the offerDescription.
-    //     } catch( err ) {
-    //         // Handle Errors
-    //     };
-    //     peerConnection.addEventListener( 'datachannel', event => {
-    //         let datachannel = event.channel;
-        
-    //         // Now you've got the datachannel.
-    //         // You can hookup and use the same events as above ^
-    //     } );
+    const handleRemoteCandidate = ( iceCandidate ) => {
+        iceCandidate = new RTCIceCandidate( iceCandidate );
+    
+        if ( peerConnection.remoteDescription == null ) {
+            return remoteCandidates.push( iceCandidate );
+        };
+    
+        return peerConnection.addIceCandidate( iceCandidate );
+    };
+    
+    const processCandidates = ()=> {
+        if ( remoteCandidates.length < 1 ) { return; };
+    
+        remoteCandidates.map( candidate => peerConnection.addIceCandidate( candidate ) );
+        remoteCandidates = [];
+    };
+ 
     return(
    (  (localMediaStream) && 
    <View style={{...StyleSheet.objectFit, flex:1}} >
