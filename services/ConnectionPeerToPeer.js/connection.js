@@ -133,6 +133,7 @@ const ConnectionP2P = ({ params}) => {
                     await peerConnection.setRemoteDescription( offerDescription );
                                     
                     const answerDescription = await peerConnection.createAnswer( sessionConstraints );
+                    console.log(answerDescription);
                     await peerConnection.setLocalDescription( answerDescription );
                    
                     processCandidates()
