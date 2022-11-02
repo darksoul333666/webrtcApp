@@ -38,10 +38,10 @@ const ConnectionP2P = ({ params}) => {
     };
     let remoteCandidates = [];
 
-    
     const [localMediaStream, setLocalMediaStream] = useState(null);
     const [remoteMediaStream, setRemoteMediaStream] = useState(null);
     const [tokenFirebase, setTokenFirebase] = useState('');
+    const [creatingOffer, setCreatingOffer] = useState(true);
     let  peerConnection = new RTCPeerConnection( peerConstraints );
     let  datachannel;
 
@@ -69,10 +69,6 @@ const ConnectionP2P = ({ params}) => {
                         
                     });
                   };
-                  let token = await messaging().getToken();
-                  setTokenFirebase(token);
-                  if(token === 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS')
-                  {createOffer()}
             }
         }
         createOfferCall()
@@ -80,6 +76,7 @@ const ConnectionP2P = ({ params}) => {
 
     const createOffer = async() => {
         console.log("enviando oferta");
+        setCreatingOffer(false)
         try {
             const offerDescription = await peerConnection.createOffer( sessionConstraints );
             await peerConnection.setLocalDescription( offerDescription );
@@ -106,7 +103,7 @@ const ConnectionP2P = ({ params}) => {
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
             if(message.data.type === 'answer'){
-                console.log(message.data.data)
+                console.log(JSON.parse(message.data.data))
 
                 try {
                     const remoteDesc = new RTCSessionDescription(JSON.parse(message.data.data));
@@ -137,19 +134,15 @@ const ConnectionP2P = ({ params}) => {
                     await peerConnection.setLocalDescription( answerDescription );
                    
                     processCandidates()
-                    //Envio mi respuesta al servidor
                     let token = await messaging().getToken();
                     if(token !== 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
-                        Alert.alert("Enviando respuesta al api")
                         try {
                             (await API()).
                             post(ROUTES.SEND_ANSWER, JSON.stringify({answer:answerDescription, tokenFirebase:token})).
                             then(
                                 res=>{
-                                    Alert.alert("Servidor recibio la respuesta")
                                 }
                             ).catch(error =>{
-                                Alert.alert("Servidor FALLÓ AL RECIBIR OFERTA", JSON.stringify(error))
                             })
                         } catch (error) {
                             Alert.alert("Servidor FALLÓ AL RECIBIR OFERTA", (error))
@@ -167,36 +160,6 @@ const ConnectionP2P = ({ params}) => {
      listenerOffer();
     },[])
 
-    
-    
-    // const startWebcam = async () => {
-    //     pc.current = new RTCPeerConnection(servers);
-    //     const local = await mediaDevices.getUserMedia({
-    //       video: true,
-    //       audio: true,
-    //     });
-    //     pc.current.addStream(local);
-    //     setLocalStream(local);
-    
-        
-    
-    //     // Push tracks from local stream to peer connection
-    //     local.getTracks().forEach(track => {
-    //       pc.current.getLocalStreams()[0].addTrack(track);
-    //     });
-    
-    //     // Pull tracks from peer connection, add to remote video stream
-    //     pc.current.ontrack = event => {
-    //       event.streams[0].getTracks().forEach(track => {
-    //         remote.addTrack(track);
-    //       });
-    //     };
-    
-    //     pc.current.onaddstream = event => {
-    //       setRemoteStream(event.stream);
-    //     };
-    //   };
-    
     const destroyMedia = () => {
         localMediaStream.getTracks().map(
             track => track.stop()
@@ -208,13 +171,24 @@ const ConnectionP2P = ({ params}) => {
     const createPeerConnection = () => {
     peerConnection.addEventListener( 'connectionstatechange', event => {} );
     peerConnection.addEventListener( 'icecandidate', event => {
+        console.log("llegó candidato");
         if ( !event.candidate ) { return; };
-        handleRemoteCandidate(event.candidate)
+         handleRemoteCandidate(event.candidate)
     } );
     peerConnection.addEventListener( 'icecandidateerror', event => {} );
     peerConnection.addEventListener( 'iceconnectionstatechange', event => {} );
     peerConnection.addEventListener( 'icegatheringstatechange', event => {} );
-    peerConnection.addEventListener( 'negotiationneeded', event => {} );
+    peerConnection.addEventListener( 'negotiationneeded', async event => {
+        console.log("event", event);
+        if(creatingOffer) {
+            let token = await messaging().getToken();
+            setTokenFirebase(token);
+            if(token === 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS')
+                  {createOffer()}
+                }
+        else return;
+
+    } );
     peerConnection.addEventListener( 'signalingstatechange', event => {} );
     peerConnection.addEventListener( 'addstream', event => {} );
     peerConnection.addEventListener( 'removestream', event => {} );
