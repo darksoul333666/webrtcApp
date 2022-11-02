@@ -114,15 +114,15 @@ const ConnectionP2P = ({ params}) => {
 
             }
 
-            // if(message.data.type === 'answer'){
-            //     try {
-            //         const remoteDesc = new RTCSessionDescription(message.data.data);
-            //         await peerConnection.setRemoteDescription(remoteDesc);
+            if(message.data.type === 'answer'){
+                try {
+                    const remoteDesc = new RTCSessionDescription(JSON.parse(message.data.data));
+                    await peerConnection.setRemoteDescription(remoteDesc);
 
-            //     } catch (error) {
-            //         console.log("ERROR al setear respuesta", error)
-            //     }
-            // }
+                } catch (error) {
+                    console.log("ERROR al setear respuesta", error)
+                }
+            }
         })
     }
     listenerAnswer()
