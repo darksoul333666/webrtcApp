@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">webrtc</string>
+    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
+    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">Qq9OquU7loX4m-MHIAbHm5c7w-KDW372y7B1d</string>
+
 </resources>

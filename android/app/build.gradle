@@ -13,7 +13,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
  * `apply from: "../../node_modules/react-native/react.gradle"` line.
  *
  * project.ext.react = [
- *   // the name of the generated asset file containing your JS bundle
+ *   // the name of the generated asset file a your JS bundle
  *   bundleAssetName: "index.android.bundle",
  *
  *   // the entry file for bundle generation. If none specified and
@@ -82,7 +82,8 @@ project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
 
-apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native/react.gradle";
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:

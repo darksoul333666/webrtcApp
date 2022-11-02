@@ -1,20 +1,9 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import  {Node, useEffect, useState} from 'react';
-import {
-  Text,
-  View
-} from 'react-native';
+import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigator } from './routes';
+import CodePushLoading from './CodePushLoading';
 import { CacheUtil } from './utils/cache';
 
 const App = () => {
@@ -27,19 +16,19 @@ const App = () => {
     }
     getToken()
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     console.log(token)
-  },[token])
+  }, [token])
   let routeName = token === null ? 'Call' : 'Home';
   return (
     <SafeAreaProvider>
-       <NavigationContainer>
-   <StackNavigator name={routeName}>
-
-  </StackNavigator>
-  </NavigationContainer>
+      <CodePushLoading />
+      <NavigationContainer>
+        <StackNavigator name={routeName}>
+        </StackNavigator>
+      </NavigationContainer>
     </SafeAreaProvider>
-   
+
   );
 };
 

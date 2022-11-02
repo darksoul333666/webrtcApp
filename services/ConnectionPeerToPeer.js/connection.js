@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 
@@ -16,6 +16,7 @@ const ConnectionP2P = ({ params}) => {
     
     let mediaConstraints = {
         audio: true,
+        isOnlyVoice:false,
         video: {
             frameRate: 30,
             facingMode: 'user'
@@ -46,10 +47,10 @@ const ConnectionP2P = ({ params}) => {
         const getMedia = async () => {
             try {
             const mediaStream = await   mediaDevices.getUserMedia(mediaConstraints);
+            let videoTrack =  mediaStream.getVideoTracks()[ 0 ];
+		        videoTrack.enabled = false;
             setLocalMediaStream(mediaStream);
-            const remote = new MediaStream();
-            setRemoteMediaStream(remote);
-    
+            
             // mediaStream.getTracks().forEach(track => {
             //     peerConnection.getLocalStreams()[0].addTrack(track);
             //   });
@@ -69,13 +70,12 @@ const ConnectionP2P = ({ params}) => {
         if(localMediaStream !== null){
             createPeerConnection()
             console.log(localMediaStream.toURL());
-            // peerConnection.ontrack = (event) => {
-            //     event.streams[0].getTracks().forEach((track) => {
-            //         localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
+            peerConnection.ontrack = (event) => {
+                event.streams[0].getTracks().forEach((track) => {
+                    localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
                     
-
-            //     });
-            //   };
+                });
+              };
         }
     },[localMediaStream]);
 
@@ -89,32 +89,39 @@ const ConnectionP2P = ({ params}) => {
                 post(ROUTES.SEND_OFFER, JSON.stringify({offer:JSON.stringify(offerDescription), tokenFirebase:token})).
                 then(
                     res=>{
+                        Alert.alert("oferta enviada")
+
                     }
                 ).catch(
                     error=>{
-                        console.log("axios",JSON.stringify(error));
+                        Alert.alert("axios",JSON.stringify(error));
                     }
                 )
             
 
         } catch( err ) {
-            console.log("error al crear oferta", err);
+            Alert.alert("error al crear oferta", JSON.stringify(err));
         };
     };
 
     useEffect(()=>{
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
-            if(message.data.type === 'answer'){
-                console.log("respuests", message.data.data);
-                try {
-                    const remoteDesc = new RTCSessionDescription(message.data.data);
-                    await peerConnection.setRemoteDescription(remoteDesc);
 
-                } catch (error) {
-                    console.log("ERROR al setear respuesta", error)
-                }
+            if(message.data.type === 'answer'){
+                console.log("tipo de data", JSON.stringify(message.data.data));
+
             }
+
+            // if(message.data.type === 'answer'){
+            //     try {
+            //         const remoteDesc = new RTCSessionDescription(message.data.data);
+            //         await peerConnection.setRemoteDescription(remoteDesc);
+
+            //     } catch (error) {
+            //         console.log("ERROR al setear respuesta", error)
+            //     }
+            // }
         })
     }
     listenerAnswer()
@@ -124,7 +131,7 @@ const ConnectionP2P = ({ params}) => {
     const listenerOffer = async() => {
         let token = await messaging().getToken();
         messaging().onMessage(async(message)=>{
-            console.log("offer",message.data.data);
+
             if(message.data.type === 'offer'){
                 try {
                     // Recibimos la oferta y la seteamos
@@ -139,19 +146,26 @@ const ConnectionP2P = ({ params}) => {
                     console.log(answerDescription)
                     let token = await messaging().getToken();
                     if(token !== 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
-                         (await API()).
-                        post(ROUTES.SEND_ANSWER, JSON.stringify({answer:answerDescription, tokenFirebase:token})).
-                        then(
-                            res=>{
-                                console.log(res);
-                            }
-                        ).catch(error =>{
-                            console.log(error);
-                        })
+                        Alert.alert("Enviando respuesta al api")
+                        try {
+                            (await API()).
+                            post(ROUTES.SEND_ANSWER, JSON.stringify({answer:(answerDescription), tokenFirebase:token})).
+                            then(
+                                res=>{
+                                    Alert.alert("Servidor recibio la respuesta")
+                                }
+                            ).catch(error =>{
+                                Alert.alert("Servidor FALLÓ AL RECIBIR OFERTA", JSON.stringify(error))
+                            })
+                        } catch (error) {
+                            Alert.alert("Servidor FALLÓ AL RECIBIR OFERTA", (error))
+
+                        }
+                        
                     }
                 
                 } catch( err ) {
-                    console.log("ERROR al setear oferta", err)
+                    //  Alert.alert("ERROR al setear oferta", JSON.stringify(err))
                 };
             }
         })

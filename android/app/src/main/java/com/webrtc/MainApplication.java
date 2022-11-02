@@ -12,6 +12,7 @@ import com.facebook.soloader.SoLoader;
 import com.webrtc.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import io.wazo.callkeep.RNCallKeepPackage; // Add this import line
+import com.microsoft.codepush.react.CodePush;
 
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
+         @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
+        }
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
