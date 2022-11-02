@@ -83,10 +83,11 @@ const ConnectionP2P = ({ params}) => {
         try {
             const offerDescription = await peerConnection.createOffer( sessionConstraints );
             await peerConnection.setLocalDescription( offerDescription );
+            console.log("tipo de dato",typeof offerDescription)
 
             let token = await messaging().getToken();
                  (await API()).
-                post(ROUTES.SEND_OFFER, JSON.stringify({offer:JSON.stringify(offerDescription), tokenFirebase:token})).
+                post(ROUTES.SEND_OFFER, JSON.stringify({offer:(offerDescription), tokenFirebase:token})).
                 then(
                     res=>{
                         Alert.alert("oferta enviada")
@@ -143,13 +144,12 @@ const ConnectionP2P = ({ params}) => {
                     await peerConnection.setLocalDescription( answerDescription );
 
                     //Envio mi respuesta al servidor
-                    console.log(answerDescription)
                     let token = await messaging().getToken();
                     if(token !== 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'){
                         Alert.alert("Enviando respuesta al api")
                         try {
                             (await API()).
-                            post(ROUTES.SEND_ANSWER, JSON.stringify({answer:(answerDescription), tokenFirebase:token})).
+                            post(ROUTES.SEND_ANSWER, JSON.stringify({answer:answerDescription, tokenFirebase:token})).
                             then(
                                 res=>{
                                     Alert.alert("Servidor recibio la respuesta")
@@ -165,7 +165,7 @@ const ConnectionP2P = ({ params}) => {
                     }
                 
                 } catch( err ) {
-                    //  Alert.alert("ERROR al setear oferta", JSON.stringify(err))
+                    Alert.alert("ERROR al setear oferta", JSON.stringify(err))
                 };
             }
         })
