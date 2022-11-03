@@ -53,8 +53,6 @@ const ConnectionP2P = ({ params}) => {
         const getMedia = async () => {
             try {
             const mediaStream = await   mediaDevices.getUserMedia(mediaConstraints);
-            let videoTrack =  mediaStream.getVideoTracks()[ 0 ];
-		        videoTrack.enabled = false;
             setLocalMediaStream(mediaStream);
             } catch( err ) {
                 console.log("ERROR",err)
@@ -66,21 +64,17 @@ const ConnectionP2P = ({ params}) => {
     useEffect(()=>{
         const createOfferCall = async () =>{
             if(localMediaStream !== null){
+                peerConnection.addStream( localMediaStream );
+
                 createPeerConnection()
-                peerConnection.ontrack = (event) => {
-                    event.streams[0].getTracks().forEach((track) => {
-                        localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
-                        
-                    });
-                  };
+               
             }
         }
         createOfferCall()
     },[localMediaStream]);
 
     const createOffer = async() => {
-        console.log("enviando oferta");
-        setCreatingOffer(false)
+       setCreatingOffer(false)
         try {
             const offerDescription = await peerConnection.createOffer( sessionConstraints );
             await peerConnection.setLocalDescription( offerDescription );
@@ -102,10 +96,6 @@ const ConnectionP2P = ({ params}) => {
             Alert.alert("error al crear oferta", JSON.stringify(err));
         };
     };
-
-    useEffect(()=>{
-        console.log("cambio peer",peerConnection);
-    },[peerConnection])
     useEffect(()=>{
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
@@ -115,8 +105,17 @@ const ConnectionP2P = ({ params}) => {
                 try {
                     if(creatingAnswer) {
                     console.log("seteando respuesta");
-                    const remoteDesc = await new RTCSessionDescription(JSON.parse(message.data.data));
+                    const remoteDesc =  new RTCSessionDescription(JSON.parse(message.data.data));
                     await peerConnection.setRemoteDescription(remoteDesc);
+                    console.log("asdjnasjdnjaskd");
+
+                     peerConnection.ontrack = (event) => {
+                    event.streams[0].getTracks().forEach((track) => {
+                        localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
+                        
+                    });
+                  };
+
                     } else return;
                     
 
@@ -196,13 +195,10 @@ const ConnectionP2P = ({ params}) => {
 
     } );
     peerConnection.addEventListener( 'signalingstatechange', event => {} );
-    peerConnection.addEventListener( 'addstream', event => {
-        console.log("se agrego remoto", event);
-    } );
     peerConnection.addEventListener( 'removestream', event => {} );
     createDataChanel()
     }
-
+   
     const createDataChanel = () => {
         datachannel = peerConnection.createDataChannel( 'my_chanel_webrtcapp' );
         datachannel.addEventListener( 'open', event => {} );
