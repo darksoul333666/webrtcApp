@@ -42,7 +42,11 @@ const ConnectionP2P = ({ params}) => {
     const [remoteMediaStream, setRemoteMediaStream] = useState(null);
     const [tokenFirebase, setTokenFirebase] = useState('');
     const [creatingOffer, setCreatingOffer] = useState(true);
-    let  peerConnection = new RTCPeerConnection( peerConstraints );
+    const [creatingAnswer, setCreatingAnswer] = useState(true);
+    // let  peerConnection = new RTCPeerConnection( peerConstraints );
+    const [peerConnection, setPeerConnection] = useState(
+        new RTCPeerConnection( peerConstraints )
+    )
     let  datachannel;
 
     useEffect(()=>{
@@ -100,14 +104,21 @@ const ConnectionP2P = ({ params}) => {
     };
 
     useEffect(()=>{
+        console.log("cambio peer",peerConnection);
+    },[peerConnection])
+    useEffect(()=>{
     const listenerAnswer = async() => { 
         messaging().onMessage(async(message)=>{
+            setCreatingAnswer(false);
             if(message.data.type === 'answer'){
-                console.log(JSON.parse(message.data.data))
-
+                setCreatingAnswer(false)
                 try {
-                    const remoteDesc = new RTCSessionDescription(JSON.parse(message.data.data));
+                    if(creatingAnswer) {
+                    console.log("seteando respuesta");
+                    const remoteDesc = await new RTCSessionDescription(JSON.parse(message.data.data));
                     await peerConnection.setRemoteDescription(remoteDesc);
+                    } else return;
+                    
 
                 } catch (error) {
                     console.log("ERROR al setear respuesta", error)
@@ -122,15 +133,12 @@ const ConnectionP2P = ({ params}) => {
     const listenerOffer = async() => {
         let token = await messaging().getToken();
         messaging().onMessage(async(message)=>{
-
             if(message.data.type === 'offer'){
                 try {
-
                     const offerDescription = new RTCSessionDescription( JSON.parse(message.data.data) );
                     await peerConnection.setRemoteDescription( offerDescription );
                                     
                     const answerDescription = await peerConnection.createAnswer( sessionConstraints );
-                    console.log(answerDescription);
                     await peerConnection.setLocalDescription( answerDescription );
                    
                     processCandidates()
@@ -169,17 +177,15 @@ const ConnectionP2P = ({ params}) => {
     }
     
     const createPeerConnection = () => {
+
     peerConnection.addEventListener( 'connectionstatechange', event => {} );
     peerConnection.addEventListener( 'icecandidate', event => {
-        console.log("llegó candidato");
         if ( !event.candidate ) { return; };
          handleRemoteCandidate(event.candidate)
     } );
     peerConnection.addEventListener( 'icecandidateerror', event => {} );
     peerConnection.addEventListener( 'iceconnectionstatechange', event => {} );
-    peerConnection.addEventListener( 'icegatheringstatechange', event => {} );
     peerConnection.addEventListener( 'negotiationneeded', async event => {
-        console.log("event", event);
         if(creatingOffer) {
             let token = await messaging().getToken();
             setTokenFirebase(token);
@@ -190,22 +196,19 @@ const ConnectionP2P = ({ params}) => {
 
     } );
     peerConnection.addEventListener( 'signalingstatechange', event => {} );
-    peerConnection.addEventListener( 'addstream', event => {} );
+    peerConnection.addEventListener( 'addstream', event => {
+        console.log("se agrego remoto", event);
+    } );
     peerConnection.addEventListener( 'removestream', event => {} );
     createDataChanel()
     }
 
-    const destroyPeerConnection = () => {
-    peerConnection._unregisterEvents();
-    peerConnection.close();
-    peerConnection = null;
-    }
     const createDataChanel = () => {
-    datachannel = peerConnection.createDataChannel( 'my_chanel_webrtcapp' );
-    datachannel.addEventListener( 'open', event => {} );
-    datachannel.addEventListener( 'close', event => {} );
-    datachannel.addEventListener( 'message', message => {} );
-    }
+        datachannel = peerConnection.createDataChannel( 'my_chanel_webrtcapp' );
+        datachannel.addEventListener( 'open', event => {} );
+        datachannel.addEventListener( 'close', event => {} );
+        datachannel.addEventListener( 'message', message => {} );
+        }
     const handleRemoteCandidate = ( iceCandidate ) => {
         iceCandidate = new RTCIceCandidate( iceCandidate );
     
@@ -217,8 +220,7 @@ const ConnectionP2P = ({ params}) => {
     };
     
     const processCandidates = ()=> {
-        if ( remoteCandidates.length < 1 ) { return; };
-    
+        // if ( remoteCandidates.length < 1 ) { return; };
         remoteCandidates.map( candidate => peerConnection.addIceCandidate( candidate ) );
         remoteCandidates = [];
     };
