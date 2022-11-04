@@ -22,12 +22,20 @@ const ConnectionP2P = ({ params }) => {
             facingMode: 'user'
         }
     };
+
     let peerConstraints = {
-        iceServers: [
-            {
-                urls: 'stun:stun.l.google.com:19302'
-            }
-        ]
+        iceServers: [{
+            urls: [ "stun:ws-turn4.xirsys.com" ]}, 
+            {username: "OUKzyQ7dJ7RLp3oMYmHwPMkmDS8jIuojMzswbeCRfv_VyJpP26uc5VTCu0UuYUIzAAAAAGNkVIBKYWlyb0NhbWFyaWxsbw==",
+            credential: "bbad8616-5bd2-11ed-96e5-0242ac140004",
+            urls: [
+            "turn:ws-turn4.xirsys.com:80?transport=udp",
+            "turn:ws-turn4.xirsys.com:3478?transport=udp",
+            "turn:ws-turn4.xirsys.com:80?transport=tcp",
+            "turn:ws-turn4.xirsys.com:3478?transport=tcp",
+            "turns:ws-turn4.xirsys.com:443?transport=tcp",
+             "turns:ws-turn4.xirsys.com:5349?transport=tcp"
+            ]}]
     };
     let sessionConstraints = {
         mandatory: {
@@ -140,6 +148,9 @@ const ConnectionP2P = ({ params }) => {
                         receiveAnswer(message.data.data)
                         break;
                     case "candidate":
+                        console.log(JSON.parse(message.data.data).candidate);
+                        
+                          handleRemoteCandidate(JSON.parse(message.data.data).candidate);
                         break;
                 }
             })
@@ -164,7 +175,7 @@ const ConnectionP2P = ({ params }) => {
                 post(ROUTES.SEND_OFFER, JSON.stringify({ offer: offerDescription, tokenFirebase: token })).
                 then(
                     res => {
-                        Alert.alert("oferta enviada")
+                        console.log("oferta enviada")
                     }
                 ).catch(
                     error => {
@@ -178,27 +189,71 @@ const ConnectionP2P = ({ params }) => {
         };
     };
 
-    const createPeerConnection = () => {
+    const createPeerConnection = async() => {
+        let token = await messaging().getToken();
         peerConnection.addEventListener('connectionstatechange', event => { });
-        peerConnection.addEventListener('icecandidate', event => {
+        peerConnection.addEventListener('icecandidate', async event => {
             if (!event.candidate) { return; };
-            handleRemoteCandidate(event.candidate)
+            handleRemoteCandidate(event.candidate.candidate);
+
         });
-        peerConnection.addEventListener('icecandidateerror', event => { });
-        peerConnection.addEventListener('iceconnectionstatechange', event => { });
+        peerConnection.addEventListener('icecandidateerror', event => {
+            console.log("error ice candidate", event);
+         });
+        peerConnection.addEventListener('iceconnectionstatechange', event => { 
+            console.log(peerConnection.iceConnectionState)
+            switch( peerConnection.iceConnectionState ) {
+                case 'connected':
+                    console.log("peer exitoso");
+                case 'completed':
+            };
+        });
         peerConnection.addEventListener('negotiationneeded', async event => {
-            let token = await messaging().getToken();
             setTokenFirebase(token);
-            if (token === 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS') {
+              let tokenn = 'di5gR_AhSaSdZw0aapuMnV:APA91bGOa_mNa4LhtSH9QCPpRK0JeTJL0q2ktD3_ffSknq-gbgB28kwEya040r63J2B37YwV9660lu-BhFyYDKsUK-BDxnfNr7RjN31JUJrmbWk6F7ETh5kICYNUg7EJahhe3EoOAsse';
+
+            if (token === tokenn) {
                 setCreatingOffer(true);
             }
         }
         );
         peerConnection.addEventListener('addstream', event => {
             console.log("stream agregado", event);
+            setRemoteMediaStream(event.stream)
         });
-        peerConnection.addEventListener('signalingstatechange', event => { });
+        peerConnection.addEventListener('signalingstatechange', event => {
+            console.log("event", event);
+         });
         peerConnection.addEventListener('removestream', event => { });
+        peerConnection.addEventListener("icegatheringstatechange", async (ev) => {
+            switch(peerConnection.iceGatheringState) {
+              case "new":
+                console.log("ice nuevo");
+                /* gathering is either just starting or has been reset */
+                break;
+              case "gathering":
+                console.log("ice empezando");
+
+                break;
+              case "complete":
+                let tokenn = 'di5gR_AhSaSdZw0aapuMnV:APA91bGOa_mNa4LhtSH9QCPpRK0JeTJL0q2ktD3_ffSknq-gbgB28kwEya040r63J2B37YwV9660lu-BhFyYDKsUK-BDxnfNr7RjN31JUJrmbWk6F7ETh5kICYNUg7EJahhe3EoOAsse';
+
+                if (token === tokenn)
+
+                {    
+                    ( await API()).
+                    post(ROUTES.SEND_CANDIDATES, JSON.stringify({ candidates: remoteCandidates })).
+                    then(
+                        res => {
+                        }
+                    ).catch(
+                        error => {
+                            Alert.alert("axios", JSON.stringify(error));
+                        }
+                    )}
+              break
+            }
+          });
         createDataChanel()
     }
 
@@ -219,7 +274,7 @@ const ConnectionP2P = ({ params }) => {
     };
 
     const processCandidates = () => {
-        // if ( remoteCandidates.length < 1 ) { return; };
+         if ( remoteCandidates.length < 1 ) { return; };
         remoteCandidates.map(candidate => peerConnection.addIceCandidate(candidate));
         remoteCandidates = [];
     };
@@ -238,10 +293,22 @@ const ConnectionP2P = ({ params }) => {
                     value={tokenFirebase}
                     placeholder="useless placeholder"
                 />
+            {/* ((remoteMediaStream) &&(
+                
+            )) */}
+            {remoteMediaStream && (
+                <RTCView
+                    mirror={true}
+                    style={{ flex: 1, }}
+                    objectFit={'cover'}
+                    streamURL={remoteMediaStream.toURL()}
+                />
+            )}
             </View>
 
 
         )
+
     )
 }
 
