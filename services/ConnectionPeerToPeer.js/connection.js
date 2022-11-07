@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TextInput, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
+import RNCallKeep from 'react-native-callkeep';
 
 import {
     RTCPeerConnection,
@@ -76,9 +77,9 @@ const ConnectionP2P = ({ params }) => {
         new RTCPeerConnection(peerConstraints)
     )
     let datachannel;
+    RNCallKeep.setup(options).then(accepted => {});
 
     useEffect(() => {
-
         const getMedia = async () => {
             try {
                 const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
@@ -114,8 +115,6 @@ const ConnectionP2P = ({ params }) => {
                 console.log("seteando respuesta");
                 const remoteDesc = new RTCSessionDescription(JSON.parse(answer));
                 await peerConnection.setRemoteDescription(remoteDesc);
-                console.log("asdjnasjdnjaskd");
-
                 peerConnection.ontrack = (event) => {
                     event.streams[0].getTracks().forEach((track) => {
                         localMediaStream.addTrack(event.streams[0]); // tried with passing `track` as well
@@ -178,13 +177,6 @@ const ConnectionP2P = ({ params }) => {
         handleRemoteMessages()
     }, [])
 
-    const destroyMedia = () => {
-        localMediaStream.getTracks().map(
-            track => track.stop()
-        );
-
-        localMediaStream = null;
-    }
     const createOffer = async () => {
         try {
             console.log("enviando oferta");
@@ -278,6 +270,13 @@ const ConnectionP2P = ({ params }) => {
         datachannel.addEventListener('open', event => { });
         datachannel.addEventListener('close', event => { });
         datachannel.addEventListener('message', message => { });
+    }
+    const destroyMedia = () => {
+        localMediaStream.getTracks().map(
+            track => track.stop()
+        );
+
+        localMediaStream = null;
     }
     const handleRemoteCandidate = (iceCandidate) => {
         iceCandidate = new RTCIceCandidate(iceCandidate);
