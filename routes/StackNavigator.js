@@ -9,7 +9,7 @@ const StackNavigator = ({name}) => {
   console.log("name", name);
   return (
       <Stack.Navigator
-      initialRouteName={name}
+      initialRouteName={"Call"}
       >
         <Stack.Screen
           name="Home"
@@ -18,7 +18,6 @@ const StackNavigator = ({name}) => {
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Call" component={CallScreen} />
-
       </Stack.Navigator>
   );
 };

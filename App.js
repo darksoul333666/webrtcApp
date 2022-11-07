@@ -16,15 +16,14 @@ const App = () => {
     }
     getToken()
   }, []);
-  useEffect(() => {
-    console.log(token)
-  }, [token])
-  let routeName = token === null ? 'Call' : 'Home';
+
+  let routeName = (token == null) ? 'Login ': 'Call';
+  console.log("token",token);
   return (
     <SafeAreaProvider>
       <CodePushLoading />
       <NavigationContainer>
-        <StackNavigator name={routeName}>
+        <StackNavigator name={"Login"}>
         </StackNavigator>
       </NavigationContainer>
     </SafeAreaProvider>

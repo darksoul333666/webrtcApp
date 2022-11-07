@@ -5,7 +5,7 @@ const HomeScreen = ({
     params,
 }) => (
     <View>
-        <Apple/>
+        {/* <Apple/> */}
     </View>
 );
 

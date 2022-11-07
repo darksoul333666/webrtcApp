@@ -46,18 +46,39 @@ const ConnectionP2P = ({ params }) => {
     };
     let remoteCandidates = [];
 
+    const options = {
+        ios: {
+          appName: 'My app name',
+        },
+        android: {
+          alertTitle: 'Permissions required',
+          alertDescription: 'This application needs to access your phone accounts',
+          cancelButton: 'Cancel',
+          okButton: 'ok',
+          imageName: 'phone_account_icon',
+        //   additionalPermissions: [PermissionsAndroid.PERMISSIONS.example],
+          // Required to get audio in background when using Android 11
+          foregroundService: {
+            channelId: 'my_chanel_webrtcapp',
+            channelName: 'Foreground service for my app',
+            notificationTitle: 'My app is running on background',
+            notificationIcon: 'Path to the resource icon of the notification',
+          }, 
+        }
+      };
+
     const [localMediaStream, setLocalMediaStream] = useState(null);
     const [remoteMediaStream, setRemoteMediaStream] = useState(null);
     const [tokenFirebase, setTokenFirebase] = useState('');
     const [creatingOffer, setCreatingOffer] = useState(false);
     const [creatingAnswer, setCreatingAnswer] = useState(true);
-    // let  peerConnection = new RTCPeerConnection( peerConstraints );
     const [peerConnection, setPeerConnection] = useState(
         new RTCPeerConnection(peerConstraints)
     )
     let datachannel;
 
     useEffect(() => {
+
         const getMedia = async () => {
             try {
                 const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
@@ -122,11 +143,12 @@ const ConnectionP2P = ({ params }) => {
             let token = await messaging().getToken();
             try {
                 (await API()).
-                    post(ROUTES.SEND_ANSWER, JSON.stringify({ answer: answerDescription, tokenFirebase: token })).
+                    post(ROUTES.SEND_ANSWER, JSON.stringify({ answer: answerDescription, token: token })).
                     then(
                         res => {
                         }
                     ).catch(error => {
+                        console.log(error);
                     })
             } catch (error) {
                 Alert.alert("Servidor FALLÓ AL RECIBIR OFERTA", (error))
@@ -141,16 +163,14 @@ const ConnectionP2P = ({ params }) => {
             messaging().onMessage(async (message) => {
                 switch (message.data.type) {
                     case "offer":
-                        receiveOffer(message.data.data)
+                        receiveOffer(message.data.data);
                         break;
                     case "answer":
                         console.log("llego una respuesta");
                         receiveAnswer(message.data.data)
                         break;
-                    case "candidate":
-                        console.log(JSON.parse(message.data.data).candidate);
-                        
-                          handleRemoteCandidate(JSON.parse(message.data.data).candidate);
+                    case "candidate":                        
+                          handleRemoteCandidate(JSON.parse(message.data.data));
                         break;
                 }
             })
@@ -194,7 +214,18 @@ const ConnectionP2P = ({ params }) => {
         peerConnection.addEventListener('connectionstatechange', event => { });
         peerConnection.addEventListener('icecandidate', async event => {
             if (!event.candidate) { return; };
-            handleRemoteCandidate(event.candidate.candidate);
+            handleRemoteCandidate(event.candidate);
+           
+            ( await API()).
+            post(ROUTES.SEND_CANDIDATES, JSON.stringify({ candidates: [event.candidate], token })).
+            then(
+                res => {
+                }
+            ).catch(
+                error => {
+                    Alert.alert("axios", JSON.stringify(error));
+                }
+            )
 
         });
         peerConnection.addEventListener('icecandidateerror', event => {
@@ -210,8 +241,8 @@ const ConnectionP2P = ({ params }) => {
         });
         peerConnection.addEventListener('negotiationneeded', async event => {
             setTokenFirebase(token);
-              let tokenn = 'di5gR_AhSaSdZw0aapuMnV:APA91bGOa_mNa4LhtSH9QCPpRK0JeTJL0q2ktD3_ffSknq-gbgB28kwEya040r63J2B37YwV9660lu-BhFyYDKsUK-BDxnfNr7RjN31JUJrmbWk6F7ETh5kICYNUg7EJahhe3EoOAsse';
-
+            let tokenn = 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'
+            console.log("lanzando");
             if (token === tokenn) {
                 setCreatingOffer(true);
             }
@@ -236,21 +267,6 @@ const ConnectionP2P = ({ params }) => {
 
                 break;
               case "complete":
-                let tokenn = 'di5gR_AhSaSdZw0aapuMnV:APA91bGOa_mNa4LhtSH9QCPpRK0JeTJL0q2ktD3_ffSknq-gbgB28kwEya040r63J2B37YwV9660lu-BhFyYDKsUK-BDxnfNr7RjN31JUJrmbWk6F7ETh5kICYNUg7EJahhe3EoOAsse';
-
-                if (token === tokenn)
-
-                {    
-                    ( await API()).
-                    post(ROUTES.SEND_CANDIDATES, JSON.stringify({ candidates: remoteCandidates })).
-                    then(
-                        res => {
-                        }
-                    ).catch(
-                        error => {
-                            Alert.alert("axios", JSON.stringify(error));
-                        }
-                    )}
               break
             }
           });

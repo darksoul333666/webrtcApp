@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { appleAuth } from '@invertase/react-native-apple-authentication';
-import { AppleButton } from '@invertase/react-native-apple-authentication';
+
 
 
 const componentName = ({
@@ -36,15 +35,16 @@ const componentName = ({
       }
 
     return(
-        <AppleButton
-        buttonStyle={AppleButton.Style.WHITE}
-        buttonType={AppleButton.Type.SIGN_IN}
-        style={{
-          width: 160,
-          height: 45,
-        }}
-        onPress={() => SignIn()}
-      />
+      <></>
+      //   <AppleButton
+      //   buttonStyle={AppleButton.Style.WHITE}
+      //   buttonType={AppleButton.Type.SIGN_IN}
+      //   style={{
+      //     width: 160,
+      //     height: 45,
+      //   }}
+      //   onPress={() => SignIn()}
+      // />
     )
 }
 

@@ -11,7 +11,6 @@ import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
 import com.webrtc.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
-import io.wazo.callkeep.RNCallKeepPackage; // Add this import line
 import com.microsoft.codepush.react.CodePush;
 
 import java.util.List;
