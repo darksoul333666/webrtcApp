@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigator } from './routes';
 import CodePushLoading from './CodePushLoading';
 import { CacheUtil } from './utils/cache';
-
+import PushService from './PushService'
 const App = () => {
   const [token, setToken] = useState(null);
 
@@ -22,6 +22,7 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <CodePushLoading />
+      <PushService />
       <NavigationContainer>
         <StackNavigator name={"Login"}>
         </StackNavigator>

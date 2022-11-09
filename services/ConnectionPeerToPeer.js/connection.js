@@ -2,18 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TextInput, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
-import RNCallKeep from 'react-native-callkeep';
-
+import uuid4 from 'random-uuid-v4';
 import {
     RTCPeerConnection,
     RTCIceCandidate,
     RTCSessionDescription,
     RTCView,
-    MediaStream,
     mediaDevices,
 } from 'react-native-webrtc';
 import { API, ROUTES } from '../../api';
-const ConnectionP2P = ({ params }) => {
+const ConnectionP2P = ({ isCallerUser }) => {
 
     let mediaConstraints = {
         audio: true,
@@ -73,15 +71,24 @@ const ConnectionP2P = ({ params }) => {
     const [tokenFirebase, setTokenFirebase] = useState('');
     const [creatingOffer, setCreatingOffer] = useState(false);
     const [creatingAnswer, setCreatingAnswer] = useState(true);
+    const idUser = "asdasdasdasd";
+    const [isCandidatesLoad, setIsCandidatesLoad] = useState(false);
+    const idCall = uuid4();
+    const [inCalling, setInCalling] = useState(false)
     const [peerConnection, setPeerConnection] = useState(
         new RTCPeerConnection(peerConstraints)
     )
     let datachannel;
-    RNCallKeep.setup(options).then(accepted => {});
+    // RNCallKeep.setup(options).then(accepted => {});
 
-    useEffect(() => {
+    useEffect(() => {   
+        // RNCallKeep.displayIncomingCall(
+        //     idCall, "hola", '', 'number',  true, null);
+
         const getMedia = async () => {
             try {
+                let token = await messaging().getToken();
+                setTokenFirebase(token)
                 const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
                 setLocalMediaStream(mediaStream);
             } catch (err) {
@@ -89,8 +96,33 @@ const ConnectionP2P = ({ params }) => {
             };
         }
         getMedia()
-    }, [])
+    }, []) 
 
+    // useEffect(() => {
+    //     RNCallKeep.addEventListener('answerCall', async(e) =>{
+    //     console.log("answer", e);
+    //     RNCallKeep.setCurrentCallActive(idCall);
+
+    //     RNCallKeep.backToForeground();
+    //         setInCalling(true);
+    //     });
+    //     RNCallKeep.addEventListener('didReceiveStartCallAction', (e)=>{
+    //     RNCallKeep.startCall(idCall, "handle", "contactIdentifier" )
+    //           });
+    //     RNCallKeep.addEventListener('endCall', (e)=>{
+    //         console.log("finalizando", e);
+    //     });    
+    //     return () => {
+    //       RNCallKeep.removeEventListener('answerCall', () =>{});
+    //       RNCallKeep.removeEventListener('didReceiveStartCallAction', (e)=>{
+    //         console.log(e);
+    //       });
+    //     RNCallKeep.removeEventListener('endCall', (e)=>{
+    //         console.log("finalizando", e);
+    //     });
+    //     }
+    //   }, []);
+   
     useEffect(() => {
         const createOfferCall = async () => {
             if (localMediaStream !== null) {
@@ -109,10 +141,8 @@ const ConnectionP2P = ({ params }) => {
 
     const receiveAnswer = async (answer) => {
         setCreatingAnswer(false);
-        setCreatingAnswer(false)
         try {
             if (creatingAnswer) {
-                console.log("seteando respuesta");
                 const remoteDesc = new RTCSessionDescription(JSON.parse(answer));
                 await peerConnection.setRemoteDescription(remoteDesc);
                 peerConnection.ontrack = (event) => {
@@ -139,10 +169,9 @@ const ConnectionP2P = ({ params }) => {
             await peerConnection.setLocalDescription(answerDescription);
 
             processCandidates()
-            let token = await messaging().getToken();
             try {
                 (await API()).
-                    post(ROUTES.SEND_ANSWER, JSON.stringify({ answer: answerDescription, token: token })).
+                    post(ROUTES.SEND_ANSWER, JSON.stringify({ answer: answerDescription })).
                     then(
                         res => {
                         }
@@ -160,9 +189,15 @@ const ConnectionP2P = ({ params }) => {
     useEffect(() => {
         const handleRemoteMessages = () => {
             messaging().onMessage(async (message) => {
+                console.log("mensaje nuevo", message);
                 switch (message.data.type) {
                     case "offer":
-                        receiveOffer(message.data.data);
+                        // (await API())
+                        // .post()
+                        // .then()
+                        // .catch()
+                        // receiveOffer(message.data.data);
+                       
                         break;
                     case "answer":
                         console.log("llego una respuesta");
@@ -176,15 +211,20 @@ const ConnectionP2P = ({ params }) => {
         }
         handleRemoteMessages()
     }, [])
+    useEffect(() => {
 
+    },[isCandidatesLoad])
     const createOffer = async () => {
         try {
-            console.log("enviando oferta");
             const offerDescription = await peerConnection.createOffer(sessionConstraints);
             await peerConnection.setLocalDescription(offerDescription);
-            let token = await messaging().getToken();
+            let data = {
+                offer: offerDescription,
+                idUserCaller: idUser,
+                idCall
+            };
             (await API()).
-                post(ROUTES.SEND_OFFER, JSON.stringify({ offer: offerDescription, tokenFirebase: token })).
+                post(ROUTES.SEND_OFFER, JSON.stringify(data)).
                 then(
                     res => {
                         console.log("oferta enviada")
@@ -202,27 +242,12 @@ const ConnectionP2P = ({ params }) => {
     };
 
     const createPeerConnection = async() => {
-        let token = await messaging().getToken();
         peerConnection.addEventListener('connectionstatechange', event => { });
         peerConnection.addEventListener('icecandidate', async event => {
             if (!event.candidate) { return; };
             handleRemoteCandidate(event.candidate);
-           
-            ( await API()).
-            post(ROUTES.SEND_CANDIDATES, JSON.stringify({ candidates: [event.candidate], token })).
-            then(
-                res => {
-                }
-            ).catch(
-                error => {
-                    Alert.alert("axios", JSON.stringify(error));
-                }
-            )
-
         });
-        peerConnection.addEventListener('icecandidateerror', event => {
-            console.log("error ice candidate", event);
-         });
+        peerConnection.addEventListener('icecandidateerror', event => {});
         peerConnection.addEventListener('iceconnectionstatechange', event => { 
             console.log(peerConnection.iceConnectionState)
             switch( peerConnection.iceConnectionState ) {
@@ -232,16 +257,12 @@ const ConnectionP2P = ({ params }) => {
             };
         });
         peerConnection.addEventListener('negotiationneeded', async event => {
-            setTokenFirebase(token);
-            let tokenn = 'dk7BRsCESYqDzS-HJWrBJJ:APA91bH6-BBgV95Oz8PpxR7B84P_c8NTAfaS81h3wKEG5quet5iavkjpQ0_dW1gtaOjP7nGFZpDG7PiMBAorbKwlsOZyVwQ_ZWNuBk9xJ8sLu-FlNb-KBxsqxe3ZFBtWyE5WQ3_UpMAS'
-            console.log("lanzando");
-            if (token === tokenn) {
-                setCreatingOffer(true);
-            }
+           if(isCallerUser){
+            setCreatingOffer(true);
+           }
         }
         );
         peerConnection.addEventListener('addstream', event => {
-            console.log("stream agregado", event);
             setRemoteMediaStream(event.stream)
         });
         peerConnection.addEventListener('signalingstatechange', event => {
@@ -252,13 +273,27 @@ const ConnectionP2P = ({ params }) => {
             switch(peerConnection.iceGatheringState) {
               case "new":
                 console.log("ice nuevo");
-                /* gathering is either just starting or has been reset */
                 break;
               case "gathering":
                 console.log("ice empezando");
-
                 break;
               case "complete":
+                if(isCallerUser){
+                    let data = { candidates: remoteCandidates, 
+                        idCall, idUser, userType:  "caller" };
+                    ( await API()).
+                    post(ROUTES.SEND_CANDIDATES, JSON.stringify(data)).
+                    then( response => {
+                        response.data.callCandidates.forEach((candidate) => {
+                            handleRemoteCandidate(candidate)
+                        })}
+                    ).catch(
+                        error => {
+                            console.log(error);
+                        }
+                    )
+                } else setIsCandidatesLoad(true);
+                
               break
             }
           });
@@ -299,7 +334,7 @@ const ConnectionP2P = ({ params }) => {
             <View style={{ ...StyleSheet.objectFit, flex: 1 }} >
                 <RTCView
                     mirror={true}
-                    style={{ flex: 1, }}
+                    style={{ flex: 4, }}
                     objectFit={'cover'}
                     streamURL={localMediaStream.toURL()}
                 />
