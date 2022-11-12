@@ -5,7 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigator } from './routes';
 import CodePushLoading from './CodePushLoading';
 import { CacheUtil } from './utils/cache';
-import PushService from './PushService'
+import PushService from './PushService';
+import { linking } from './Linking';
 const App = () => {
   const [token, setToken] = useState(null);
 
@@ -13,19 +14,19 @@ const App = () => {
     const getToken = async () => {
       const tok = await CacheUtil.getToken();
       setToken(tok);
+      setTimeout(() => {}, 1000);
+
     }
     getToken()
   }, []);
 
-  let routeName = (token == null) ? 'Login ': 'Call';
-  console.log("token",token);
+  let routeName = (token == null) ? 'Login': 'Home';
   return (
     <SafeAreaProvider>
       <CodePushLoading />
       <PushService />
-      <NavigationContainer>
-        <StackNavigator name={"Login"}>
-        </StackNavigator>
+      <NavigationContainer linking={linking}>
+        <StackNavigator name={routeName}/>
       </NavigationContainer>
     </SafeAreaProvider>
 

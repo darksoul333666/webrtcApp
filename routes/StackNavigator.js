@@ -6,15 +6,11 @@ import { CallScreen } from '../src/screens'
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = ({name}) => {
-  console.log("name", name);
   return (
       <Stack.Navigator
-      initialRouteName={"Call"}
+      initialRouteName={name}
       >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
+        <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Call" component={CallScreen} />
       </Stack.Navigator>

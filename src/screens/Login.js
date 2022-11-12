@@ -3,9 +3,7 @@ import { Text, View, Button } from 'react-native';
 import {GoogleButtonSignIn} from '../../services/auth-services';
 import messaging from '@react-native-firebase/messaging'
 
-const LoginScreen = ({
-
-}) => {
+const LoginScreen = ({navigation}) => {
     useEffect(()=>{
         const getToken = async() =>{
             await messaging().requestPermission({
@@ -19,7 +17,9 @@ const LoginScreen = ({
     },[])
     return(
     <View>
-        <GoogleButtonSignIn/>
+        <GoogleButtonSignIn
+        navigation={navigation}
+        />
     </View>
 );
 }

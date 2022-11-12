@@ -20,11 +20,15 @@ async function config(URL) {
 export const API = async () => axios.create(await config(URL_API));
 
 export const ROUTES = {
-LOGIN : URL_API + 'login',
+LOGIN : URL_API + 'user/login',
 STABLISH_CONNECTION: URL_API + 'connection',
 SEND_FEEDBACK_USER : URL_API + 'feeback-user',
 SEND_FEEDBACK_ASSISTANT : URL_API + 'feeback-assistant',
 SEND_OFFER : URL_API + 'call/sendOffer',
+GET_OFFER: URL_API + 'call/getOffer',
 SEND_ANSWER : URL_API + 'call/sendAnswer',
-SEND_CANDIDATES : URL_API + 'call/sendCandidates'
+SEND_CANDIDATES : URL_API + 'call/sendCandidates',
+GET_CANDIDATES: URL_API + 'call/getCandidates',
+GET_ANSWER: URL_API + 'call/getAnswer',
+UPDATE_TOKEN_FIREBASE: URL_API + 'user/updateToken'
 }

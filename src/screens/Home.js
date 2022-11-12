@@ -1,21 +1,34 @@
 import React, { useEffect } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Linking, Text, TouchableOpacity, View } from 'react-native';
 import Apple from '../../services/auth-services/AppleAuthentication';
 import uuid4 from 'random-uuid-v4';
+import { Button } from '@rneui/base';
+import { useLinkTo } from '@react-navigation/native';
+import { API, ROUTES } from '../../api';
+import messaging from '@react-native-firebase/messaging';
+import { CacheUtil } from '../../utils/cache';
 
-const HomeScreen = ({
-    params,
-}) => {
-    useEffect(()=>{
-        console.log(uuid4());
-
-    },[])
-    
+const HomeScreen = ({navigation}) => {
+  useEffect(()=>{
+    const update = async () => {
+      let token = await messaging().getToken();
+      let user = await CacheUtil.getUser();
+      (await API())
+      .post(ROUTES.UPDATE_TOKEN_FIREBASE, JSON.stringify({token, idUser:user.idUser}))
+      .catch()
+    };
+    update();
+  },[])
     return (
-    <View>
-       <TouchableOpacity>
-        <Text>LLamar</Text>
-       </TouchableOpacity>
+    <View style={{ display:'flex', alignSelf:"center", width:'50%', justifyContent:"center", flexDirection:'column'}} >
+       <Button
+       title={"Iniciar llamada"}
+       onPress={async()=> navigation.navigate("Call", {isCallerUser:"true"}) 
+       }/>
+         <Button
+       title={"Cerrar sesión"}
+       onPress={async()=> navigation.navigate("Call", {isCallerUser:true}) 
+       }/>
     </View>
 );}
 
