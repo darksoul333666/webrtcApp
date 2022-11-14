@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.zxcpoiu.incallmanager.InCallManagerPackage;
 import io.wazo.callkeep.RNCallKeepPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -13,6 +14,7 @@ import com.facebook.soloader.SoLoader;
 import com.webrtc.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import com.microsoft.codepush.react.CodePush;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 import java.util.List;
 

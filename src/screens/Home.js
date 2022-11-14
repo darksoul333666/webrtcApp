@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { Linking, Text, TouchableOpacity, View } from 'react-native';
 import Apple from '../../services/auth-services/AppleAuthentication';
-import uuid4 from 'random-uuid-v4';
 import { Button } from '@rneui/base';
-import { useLinkTo } from '@react-navigation/native';
 import { API, ROUTES } from '../../api';
 import messaging from '@react-native-firebase/messaging';
 import { CacheUtil } from '../../utils/cache';
@@ -19,6 +17,7 @@ const HomeScreen = ({navigation}) => {
     };
     update();
   },[])
+
     return (
     <View style={{ display:'flex', alignSelf:"center", width:'50%', justifyContent:"center", flexDirection:'column'}} >
        <Button

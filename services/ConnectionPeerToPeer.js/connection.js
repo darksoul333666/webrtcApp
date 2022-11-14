@@ -13,13 +13,15 @@ import {
 } from 'react-native-webrtc';
 import { API, ROUTES } from '../../api';
 import { mediaConstraints, peerConstraints, sessionConstraints } from './connect';
+
 const ConnectionP2P = ({ 
     isCallerUser, 
     connecting, 
     connected, 
     acceptedCall, 
     idCallIncoming,
-    idUser }) => {
+    microphoneEnabled,
+    speakerEnabled }) => {
     let remoteCandidates = [];
     let localCandidates = []
     let datachannel;
@@ -82,6 +84,22 @@ const ConnectionP2P = ({
         }
         handleRemoteMessages()
     }, []);
+
+    useEffect(() => {
+        const handleMicrophone = async() => {
+            try {
+            const audioTrack = await localMediaStream.getAudioTracks()[ 0 ];
+            audioTrack.enabled = microphoneEnabled;
+            } catch (error) {
+                console.log(error);
+            }
+        };
+      localMediaStream !== null ? handleMicrophone() : null;
+    }, [microphoneEnabled]);
+
+    useEffect(()=> {
+
+    }, [speakerEnabled])
 
     const getAnswer = async (_idCall) => {
         setCreatingAnswer(false);
