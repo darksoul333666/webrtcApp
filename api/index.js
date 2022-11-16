@@ -30,5 +30,7 @@ SEND_ANSWER : URL_API + 'call/sendAnswer',
 SEND_CANDIDATES : URL_API + 'call/sendCandidates',
 GET_CANDIDATES: URL_API + 'call/getCandidates',
 GET_ANSWER: URL_API + 'call/getAnswer',
-UPDATE_TOKEN_FIREBASE: URL_API + 'user/updateToken'
+UPDATE_TOKEN_FIREBASE: URL_API + 'user/updateToken',
+REQUEST_CALL: 'call/requestCall',
+RESPONSE_CALL: 'call/responseCall'
 }

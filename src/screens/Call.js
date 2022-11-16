@@ -3,28 +3,78 @@ import { Text, View, Pressable, StyleSheet, TouchableOpacity, Alert } from 'reac
 import { ConnectionP2P } from '../../services/ConnectionPeerToPeer.js'
 import { Avatar } from '@rneui/themed';
 import InCallManager from 'react-native-incall-manager';
+import messaging from '@react-native-firebase/messaging';
+import { CacheUtil } from '../../utils/cache';
+import { API, ROUTES } from '../../api';
+import uuid4 from 'random-uuid-v4';
+import axios from 'axios';
+import { Buffer } from "buffer";
 
-
-const CallScreen = ({ route }) => {
-  const [acceptedCall, setAcceptedCall] = useState(false);
+const CallScreen = ({ route, navigation }) => {
   const [connectingCall, setConnectingCall] = useState(false);
   const [connectedCall, setConnectedCall] = useState(false);
   const [idCallIncoming, setIdCallIncoming] = useState(null);
+  const [idCallStarting, setIdCall] = useState(uuid4());
   const [isCallerUser, setIsCallerUser] = useState(false);
   const [isSpeakerOn, setIsSpeakerOn] = useState(false);
   const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
-
+  const [hangoutCall, setHangoutCall] = useState(false);
+  const [imageRef, setImageRef] = useState('');
   useEffect(() => {
     if (route?.params?.isCallerUser === "false") {
       setIdCallIncoming(route?.params?.idCallIncoming);
       InCallManager.start({media: 'audio', ringback: '_BUNDLE_'});
-      setIsCallerUser(false)
+      setIsCallerUser(false);
     } else {
       setIsCallerUser(true);
-
+      requestCall();
     }
   }, [route]);
 
+  useEffect(() => {
+    const handleRemoteMessages = () => {
+        messaging().onMessage(async (message) => {
+          let isRespondingCall = message.data.type === 'responseCall';
+          let isRequestingCall = message.data.type === 'requestCall';
+            if ((isRespondingCall || isRequestingCall ) && message.data.idCall === idCallStarting) {
+                setConnectedCall(true);
+                setImageRef(message.data.image)
+            }
+        })
+    }
+    handleRemoteMessages()
+    }, []);
+
+  const requestCall = async () => {
+    console.log("solicitando");
+    let user = await CacheUtil.getUser();
+    let data = {
+      idUserCaller: user.idUser,
+      idCall: idCallStarting
+    };
+    (await API()).
+    post(ROUTES.REQUEST_CALL, JSON.stringify(data))
+    .catch( error => {
+      Alert.alert("axios", JSON.stringify(error));
+    }
+    )
+  };
+  const responseCall = async () => {
+    let user = await CacheUtil.getUser();
+    let data = {
+      idCall: idCallIncoming,
+      idUserAssistant: user.idUser,
+  };
+  console.log("response de llamada", data);
+  (await API()).
+      post(ROUTES.RESPONSE_CALL, JSON.stringify(data)).
+      then(async(response) => {
+          if(response.data.succes) connecting(true);
+          }
+      ).catch(error => {
+          console.log(error);
+      })
+  };
   const renderTabCallInProgress = () => {
     return (
       <View style={styles.tabCallInprogress} >
@@ -40,7 +90,10 @@ const CallScreen = ({ route }) => {
               }}
             />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={()=>
+          { connectedCall ? setHangoutCall(true) : navigation.goBack()}}
+        >
             <Avatar
               size={72}
               rounded
@@ -69,7 +122,9 @@ const CallScreen = ({ route }) => {
   const renderTabCallIncoming = () => {
     return (
       <View style={styles.tabCallIncoming}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={()=> navigation.goBack()}
+      >
             <Avatar
               size={72}
               rounded
@@ -79,7 +134,13 @@ const CallScreen = ({ route }) => {
               }}
             />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={()=> {
+            responseCall();
+            setConnectedCall(true);
+            InCallManager.stopRingback();
+          }}
+        >
             <Avatar
               size={72}
               rounded
@@ -94,34 +155,36 @@ const CallScreen = ({ route }) => {
   };
   return (
     <View style={styles.container} >
-      <View style={{ backgroundColor: "#3192DA", flex: 8, flexDirection:'column', justifyContent:'center' }} >
-      <Avatar
+      <View style={styles.avatar} >
+     { connectedCall ? <Avatar
               size={250}
               rounded
-              source={{ uri: "https://randomuser.me/api/portraits/men/72.jpg" }}
+              source={{ uri: imageRef }}
               containerStyle={{
                 backgroundColor: 'green',
                 alignSelf:'center'
                 // width:300,
                 // height:300
               }}
-            />
+            /> : <Text style={{color:"white", alignSelf:'center'}} >Conectando...</Text>}
 
       </View>
       <View>
-      {(acceptedCall || isCallerUser)
-           && <ConnectionP2P
+      {(connectedCall)
+           && 
+           <ConnectionP2P
             type={"caller"}
             isCallerUser={isCallerUser}
-            connecting={value => setConnectingCall(value)}
-            connected={value => setConnectedCall(value)}
             idCallIncoming={idCallIncoming}
             speakerEnabled={isSpeakerOn}
             microphoneEnabled={isMicrophoneOn}
+            hangoutCall={hangoutCall}
+            navigation={navigation}
+            idCall={idCallStarting}
           />}
         { (!connectedCall && !isCallerUser) ? renderTabCallIncoming() :  renderTabCallInProgress()}
       </View>
-    </View>
+      </View>
 
   )
 }
@@ -131,6 +194,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'column'
+  },
+  avatar: {
+    backgroundColor: "#3192DA", 
+    flex: 8, 
+    flexDirection:'column', 
+    justifyContent:'center'
   },
   buttonCall: {
     backgroundColor: 'red',

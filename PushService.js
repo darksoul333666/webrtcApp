@@ -26,9 +26,8 @@ const [initial, setInitial] = useState(false);
         const pushNotificationsListener = async() =>{
             
             messaging().onMessage(async(remoteMessage) => {
-              console.log("remoto",remoteMessage);
                 switch (remoteMessage.data.type) {
-                    case "offer":
+                    case "requestCall":
                       Linking.openURL('webrtcapp:/Call/'+"false/"+ remoteMessage.data.idCall )
                         break;
                 }
