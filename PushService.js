@@ -28,7 +28,8 @@ const [initial, setInitial] = useState(false);
             messaging().onMessage(async(remoteMessage) => {
                 switch (remoteMessage.data.type) {
                     case "requestCall":
-                      Linking.openURL('webrtcapp:/Call/'+"false/"+ remoteMessage.data.idCall )
+                      Linking.openURL('webrtcapp:/Call/'+"false/"+ remoteMessage.data.idCall+"/"+ remoteMessage.data.idUser);
+                      //'/'+remoteMessage.data.image
                         break;
                 }
             });

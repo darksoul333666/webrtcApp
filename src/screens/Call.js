@@ -20,10 +20,12 @@ const CallScreen = ({ route, navigation }) => {
   const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
   const [hangoutCall, setHangoutCall] = useState(false);
   const [imageRef, setImageRef] = useState('');
+  const [idUserr, setIdUserr]= useState(null)
   useEffect(() => {
     if (route?.params?.isCallerUser === "false") {
       setIdCallIncoming(route?.params?.idCallIncoming);
       InCallManager.start({media: 'audio', ringback: '_BUNDLE_'});
+      getimage(route?.params?.idUser)
       setIsCallerUser(false);
     } else {
       setIsCallerUser(true);
@@ -31,14 +33,23 @@ const CallScreen = ({ route, navigation }) => {
     }
   }, [route]);
 
+  const getimage = async (id) => {
+    (await API())
+    .post(ROUTES.GET_IMAGE, JSON.stringify({idUser:id}))
+    .then(response =>{
+      setImageRef(response.data.data.image);
+      console.log("imagen", response);
+    })
+  };
+
   useEffect(() => {
     const handleRemoteMessages = () => {
         messaging().onMessage(async (message) => {
           let isRespondingCall = message.data.type === 'responseCall';
           let isRequestingCall = message.data.type === 'requestCall';
-            if ((isRespondingCall || isRequestingCall ) && message.data.idCall === idCallStarting) {
+            if ((isRespondingCall || isRequestingCall )) {
                 setConnectedCall(true);
-                setImageRef(message.data.image)
+                setImageRef(message.data.image);
             }
         })
     }
@@ -156,7 +167,7 @@ const CallScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container} >
       <View style={styles.avatar} >
-     { connectedCall ? <Avatar
+     { connectedCall && (imageRef !== '') ? <Avatar
               size={250}
               rounded
               source={{ uri: imageRef }}

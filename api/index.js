@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { CacheUtil } from './../utils/cache';
 
-export const URL_API = 'https://webrtc-assistance-api.herokuapp.com/';
-//export const URL_API = 'http://192.168.0.5:4000/';
+//export const URL_API = 'https://webrtc-assistance-api.herokuapp.com/';
+export const URL_API = 'http://192.168.0.5:4000/';
 
 import messaging from '@react-native-firebase/messaging';
 
@@ -32,5 +32,6 @@ GET_CANDIDATES: URL_API + 'call/getCandidates',
 GET_ANSWER: URL_API + 'call/getAnswer',
 UPDATE_TOKEN_FIREBASE: URL_API + 'user/updateToken',
 REQUEST_CALL: 'call/requestCall',
-RESPONSE_CALL: 'call/responseCall'
+RESPONSE_CALL: 'call/responseCall',
+GET_IMAGE:URL_API+'user/getImage'
 }

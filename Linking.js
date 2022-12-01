@@ -5,6 +5,6 @@ export const linking: LinkingOptions = {
   config: {
     screens: {
       Home: 'Home/:_id',
-      Call: 'Call/:isCallerUser?/:idCallIncoming?'
+      Call: 'Call/:isCallerUser?/:idCallIncoming?/:idUser?'
   },
 }}

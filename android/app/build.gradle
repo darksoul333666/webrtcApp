@@ -273,6 +273,8 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-loud-speaker')
+    implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
