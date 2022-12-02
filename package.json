@@ -28,7 +28,6 @@
     "random-uuid-v4": "0.0.9",
     "react": "17.0.2",
     "react-native": "0.68.2",
-    "react-native-callkeep": "^4.3.3",
     "react-native-code-push": "^7.0.5",
     "react-native-incall-manager": "^4.0.0",
     "react-native-loud-speaker": "^1.0.4",
