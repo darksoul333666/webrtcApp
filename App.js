@@ -7,6 +7,8 @@ import CodePushLoading from './CodePushLoading';
 import { CacheUtil } from './utils/cache';
 import PushService from './PushService';
 import { linking } from './Linking';
+import { StripeProvider } from '@stripe/stripe-react-native';
+
 const App = () => {
   const [token, setToken] = useState(null);
 
@@ -22,6 +24,11 @@ const App = () => {
 
   let routeName = (token == null) ? 'Login': 'Home';
   return (
+        <StripeProvider
+        publishableKey={'pk_test_51MaxfDGgyCZxYRF2Yepz5WqEIXOCrW5DstyPkT2T0vOs9xquUP7r2quZYeS7ljoQdJSGFhyEVaNscG6AP8nCWOIO00t67uTLXK'}
+        merchantIdentifier="merchant.identifier" // required for Apple Pay
+        urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+      >
     <SafeAreaProvider>
       <CodePushLoading />
       <PushService />
@@ -29,7 +36,7 @@ const App = () => {
         <StackNavigator name={routeName}/>
       </NavigationContainer>
     </SafeAreaProvider>
-
+  </StripeProvider>
   );
 };
 

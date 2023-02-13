@@ -6,7 +6,8 @@ import { CallScreen } from '../src/screens';
 import { AudioScreen } from '../src/screens/components';
 import { VideoScreen } from '../src/screens/components';
 import { PaymentsScreen } from '../src/screens/components';
-
+import { StripeScreen } from '../src/screens/components/payments';
+import { WebComponent } from '../src/screens/components/payments';
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = ({name}) => {
@@ -20,6 +21,8 @@ const StackNavigator = ({name}) => {
         <Stack.Screen name="Video" component={VideoScreen} />
         <Stack.Screen name="Audio" component={AudioScreen } />
         <Stack.Screen name="Payments" component={PaymentsScreen} />
+        <Stack.Screen name="Stripe" component={StripeScreen} />
+        <Stack.Screen name="Mercado" component={WebComponent} />
 
       </Stack.Navigator>
   );
