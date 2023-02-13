@@ -19,32 +19,24 @@ const HomeScreen = ({navigation}) => {
   //   };
   //   update();
   // },[])
-  // useEffect(() => {
-  //   try {
-  //     SoundPlayer.playUrl('https://res.cloudinary.com/hoppi-app/video/upload/v1674417769/prod/storie/video/rain-thunder_qg6nof.mp3')
-  //   } catch (error) {
-  //       console.log(error);
-  //   }
-
-  // },[])
+ 
 
     return (
-    <View style={{ display:'flex', alignSelf:"center", width:'100%'}} >
-       {/* <Button
-       title={"Iniciar llamada"}
-       onPress={async()=> navigation.navigate("Call", {isCallerUser:"true"}) 
+    <View style={{ display:'flex', height:200, alignItems:'center', justifyContent:'space-around',   }} >
+       <Button
+       title={"Reproducir audio"}
+       onPress={()=> navigation.navigate("Audio") 
        }/>
          <Button
-       title={"Cerrar sesión"}
-       onPress={async()=> navigation.navigate("Call", {isCallerUser:true}) 
-       }/> */}
+       title={"Reproducir video"}
+       onPress={()=> navigation.navigate("Video") 
+       }/>
+         <Button
+       title={"Realizar pago"}
+       onPress={()=> navigation.navigate("Payments") 
+       }/>
 
-    <Video source={{uri: "https://res.cloudinary.com/hoppi-app/video/upload/q_auto:low/v1659915953/dev/hoppi/video/dcq3fnrmqwjvrsvb43hl.mov"}}   // Can be a URL or a local file.
-       style={{width:"100%", height:"100%"}}
-       paused={false}
-       resizeMode={'cover'}
-       repeat
-       />
+   
     </View>
 );}
 

@@ -2,7 +2,11 @@ import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from '../src/screens';
 import { LoginScreen } from '../src/screens';
-import { CallScreen } from '../src/screens'
+import { CallScreen } from '../src/screens';
+import { AudioScreen } from '../src/screens/components';
+import { VideoScreen } from '../src/screens/components';
+import { PaymentsScreen } from '../src/screens/components';
+
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = ({name}) => {
@@ -13,6 +17,10 @@ const StackNavigator = ({name}) => {
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Call" component={CallScreen} />
+        <Stack.Screen name="Video" component={VideoScreen} />
+        <Stack.Screen name="Audio" component={AudioScreen } />
+        <Stack.Screen name="Payments" component={PaymentsScreen} />
+
       </Stack.Navigator>
   );
 };
