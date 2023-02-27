@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import { CacheUtil } from '../../utils/cache';
 import { API, ROUTES } from '../../api';
 import { mediaConstraints, peerConstraints, sessionConstraints } from './Constants';
+import database from '@react-native-firebase/database';
 import LoudSpeaker from 'react-native-loud-speaker';
 import {
     RTCPeerConnection,
@@ -20,7 +20,8 @@ const ConnectionP2P = ({
     speakerEnabled,
     hangoutCall,
     navigation,
-    idCall
+    idCall,
+    typeUser
     }) => {
     let remoteCandidates = [];
     let localCandidates = []
@@ -37,6 +38,19 @@ const ConnectionP2P = ({
     const [remoteMediaStream, setRemoteMediaStream] = useState(null);
     const [creatingOffer, setCreatingOffer] = useState(false);
      const [peerConnection, setPeerConnection] = useState(new RTCPeerConnection(peerConstraints));
+
+     useEffect(() => {
+        let idCall='123456';
+        let typeUser='caller';
+        database()
+        .ref(`calls/${idCall}/${typeUser}Candidates`)
+        .on('value', snapshot => {
+        console.log('User data: ', snapshot?.val());
+        handleRemoteCandidate(JSON.parse(snapshot?.val()))
+
+      });
+      }, []);
+
     useEffect(() => {   
         const getMedia = async () => {
             try {
@@ -68,9 +82,6 @@ const ConnectionP2P = ({
                         || message.data.idCall === idCall){
                             destroyMedia()
                         }
-                        break;
-                    case "candidate":
-                        handleRemoteCandidate(JSON.parse(message.data.candidate))
                         break;
                 }
             })
@@ -142,6 +153,7 @@ const ConnectionP2P = ({
             Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
         }
     };
+
     const sendAnswer = async (_idCall) => {
         try {
             if(peerConnection.localDescription == null ){
@@ -161,7 +173,8 @@ const ConnectionP2P = ({
         } catch (err) {
             Alert.alert("ERROR al enviar respuesta", JSON.stringify(err))
         };
-    }
+    };
+
     const createOffer = async () => {
         try {
             if(creatingOffer){
@@ -180,6 +193,7 @@ const ConnectionP2P = ({
             Alert.alert("error al crear oferta", JSON.stringify(err));
         };
     };
+
     const getOffer = async (idCall) => {
         try {
             if(peerConnection.remoteDescription == null){
@@ -208,19 +222,14 @@ const ConnectionP2P = ({
 
         }
     };
+
     const createPeerConnection = async() => {
         peerConnection.addEventListener('connectionstatechange', event => {
         if(event === 'failed')  destroyMedia();
          });
         peerConnection.addEventListener('icecandidate', async event => {
             if (!event.candidate) { return; };
-            handleRemoteCandidate(event.candidate);
-            let data = { candidate: event.candidate, 
-                idCall: (idCallIncoming !== null) ? idCallIncoming : idCall, toUser: isCallerUser ? "assistant" : "caller"};  
-            ( await API()).
-            post(ROUTES.SEND_CANDIDATES, JSON.stringify(data))
-            .catch(error => console.log(error))
-    
+            sendCandidates(event.candidate);    
         });
         peerConnection.addEventListener('icecandidateerror', event => {});
         peerConnection.addEventListener('iceconnectionstatechange', event => { 
@@ -244,12 +253,14 @@ const ConnectionP2P = ({
         peerConnection.addEventListener("icegatheringstatechange", async (ev) => { });
         createDataChanel()
     };
+
     const createDataChanel = () => {
         datachannel = peerConnection.createDataChannel('my_chanel_webrtcapp');
         datachannel.addEventListener('open', event => { });
         datachannel.addEventListener('close', event => { });
         datachannel.addEventListener('message', message => { });
     };
+
     const destroyMedia = async () => {
         if(localMediaStream !== null){
               localMediaStream.getTracks().map(
@@ -269,6 +280,7 @@ const ConnectionP2P = ({
         navigation.goBack()
  
     };
+
     const handleRemoteCandidate = (iceCandidate) => {
         try {
             iceCandidate = new RTCIceCandidate(iceCandidate);
@@ -283,10 +295,26 @@ const ConnectionP2P = ({
         }
        
     };
+
     const processCandidates = () => {
          if ( remoteCandidates.length < 1 ) { return; };
         remoteCandidates.map(candidate => peerConnection.addIceCandidate(candidate));
         remoteCandidates = [];
+    };
+
+    const sendCandidates = (candidate) => {
+        let idCall='123456';
+        let typeUser='caller';
+        database()
+        .ref(`calls/${idCall}/${typeUser}Candidates`)
+        .push({
+          _id: Math.round(Math.random() * 1000000),
+          candidate
+        })
+        .then(res => console.log(res) )
+        .catch(e => {
+          console.log('Sorry, this message could not be sent. ', e);
+        });
     };
 
     return (

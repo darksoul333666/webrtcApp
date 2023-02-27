@@ -21,8 +21,8 @@ const StackNavigator = ({name}) => {
         <Stack.Screen name="Video" component={VideoScreen} />
         <Stack.Screen name="Audio" component={AudioScreen } />
         <Stack.Screen name="Payments" component={PaymentsScreen} />
-        <Stack.Screen name="Stripe" component={StripeScreen} />
-        <Stack.Screen name="Mercado" component={WebComponent} />
+        {/* <Stack.Screen name="Stripe" component={StripeScreen} />
+        <Stack.Screen name="Mercado" component={WebComponent} /> */}
 
       </Stack.Navigator>
   );

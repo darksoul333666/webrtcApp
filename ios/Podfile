@@ -22,7 +22,11 @@ target 'webrtc' do
   # pod 'ReactNativeIncallManager', :path => '../node_modules/react-native-incall-manager'
 
   pod 'RNPaypal', :path => '../node_modules/react-native-paypal'
-
+  pod 'Firebase/Messaging'
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  
   target 'webrtcTests' do
     inherit! :complete
     # Pods for testing

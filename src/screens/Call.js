@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Pressable, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { ConnectionP2P } from '../../services/ConnectionPeerToPeer.js'
 import { Avatar } from '@rneui/themed';
 import InCallManager from 'react-native-incall-manager';
@@ -7,11 +7,8 @@ import messaging from '@react-native-firebase/messaging';
 import { CacheUtil } from '../../utils/cache';
 import { API, ROUTES } from '../../api';
 import uuid4 from 'random-uuid-v4';
-import axios from 'axios';
-import { Buffer } from "buffer";
 
 const CallScreen = ({ route, navigation }) => {
-  const [connectingCall, setConnectingCall] = useState(false);
   const [connectedCall, setConnectedCall] = useState(false);
   const [idCallIncoming, setIdCallIncoming] = useState(null);
   const [idCallStarting, setIdCall] = useState(uuid4());
@@ -20,7 +17,7 @@ const CallScreen = ({ route, navigation }) => {
   const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
   const [hangoutCall, setHangoutCall] = useState(false);
   const [imageRef, setImageRef] = useState('');
-  const [idUserr, setIdUserr]= useState(null)
+
   useEffect(() => {
     if (route?.params?.isCallerUser === "false") {
       setIdCallIncoming(route?.params?.idCallIncoming);
@@ -54,10 +51,9 @@ const CallScreen = ({ route, navigation }) => {
         })
     }
     handleRemoteMessages()
-    }, []);
+  }, []);
 
   const requestCall = async () => {
-    console.log("solicitando");
     let user = await CacheUtil.getUser();
     let data = {
       idUserCaller: user.idUser,
@@ -70,6 +66,7 @@ const CallScreen = ({ route, navigation }) => {
     }
     )
   };
+
   const responseCall = async () => {
     let user = await CacheUtil.getUser();
     let data = {
@@ -86,6 +83,7 @@ const CallScreen = ({ route, navigation }) => {
           console.log(error);
       })
   };
+
   const renderTabCallInProgress = () => {
     return (
       <View style={styles.tabCallInprogress} >
@@ -130,6 +128,7 @@ const CallScreen = ({ route, navigation }) => {
       </View>
     )
   };
+
   const renderTabCallIncoming = () => {
     return (
       <View style={styles.tabCallIncoming}>
@@ -164,6 +163,7 @@ const CallScreen = ({ route, navigation }) => {
     </View>
     )
   };
+
   return (
     <View style={styles.container} >
       <View style={styles.avatar} >
@@ -174,11 +174,9 @@ const CallScreen = ({ route, navigation }) => {
               containerStyle={{
                 backgroundColor: 'green',
                 alignSelf:'center'
-                // width:300,
-                // height:300
               }}
-            /> : <Text style={{color:"white", alignSelf:'center'}} >Conectando...</Text>}
-
+            /> : 
+      <Text style={{color:"white", alignSelf:'center'}} >Conectando...</Text>}
       </View>
       <View>
       {(connectedCall)
