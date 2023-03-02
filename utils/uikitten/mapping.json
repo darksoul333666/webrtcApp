@@ -1,0 +1,665 @@
+{
+  "strict": {
+    "text-font-family": "ProximaNova-Regular",
+
+    "text-heading-1-font-size": 42,
+    "text-heading-1-font-weight": "800",
+    "text-heading-1-font-family": "ProximaNova-Black",
+
+    "text-heading-2-font-size": 38,
+    "text-heading-2-font-weight": "800",
+    "text-heading-2-font-family": "ProximaNova-Black",
+
+    "text-heading-3-font-size": 34,
+    "text-heading-3-font-weight": "800",
+    "text-heading-3-font-family": "ProximaNova-Black",
+
+    "text-heading-4-font-size": 30,
+    "text-heading-4-font-weight": "800",
+    "text-heading-4-font-family": "ProximaNova-Black",
+
+    "text-heading-5-font-size": 26,
+    "text-heading-5-font-weight": "800",
+    "text-heading-5-font-family": "ProximaNova-Black",
+
+    "text-heading-6-font-size": 22,
+    "text-heading-6-font-weight": "800",
+    "text-heading-6-font-family": "ProximaNova-Black",
+
+    "text-subtitle-1-font-size": 16,
+    "text-subtitle-1-font-weight": "800",
+    "text-subtitle-1-font-family": "ProximaNova-Bold",
+
+    "text-subtitle-2-font-size": 14,
+    "text-subtitle-2-font-weight": "600",
+    "text-subtitle-2-font-family": "ProximaNova-Bold",
+
+    "text-paragraph-1-font-size": 16,
+    "text-paragraph-1-font-weight": "400",
+    "text-paragraph-1-font-family": "ProximaNova-Medium",
+
+    "text-paragraph-2-font-size": 14,
+    "text-paragraph-2-font-weight": "400",
+    "text-paragraph-2-font-family": "ProximaNova-Medium",
+
+    "text-caption-1-font-size": 12,
+    "text-caption-1-font-weight": "400",
+    "text-caption-1-font-family": "ProximaNova-Regular",
+
+    "text-caption-2-font-size": 11,
+    "text-caption-2-font-weight": "400",
+    "text-caption-2-font-family": "ProximaNova-Regular",
+
+    "text-label-font-size": 16,
+    "text-label-font-weight": "800",
+    "text-label-font-family": "ProximaNova-Black",
+
+    "size-tiny": 24,
+    "size-small": 30,
+    "size-medium": 36,
+    "size-large": 42,
+    "size-giant": 48,
+    "border-radius-round": 50,
+    "border-width": 1
+  },
+  "components": {
+    "BottomNavigationTab": {
+      "appearances": {
+        "default": {
+          "mapping": {
+            "iconWidth": 20,
+            "iconHeight": 20,
+            "textColor": "transparent",
+            "iconTintColor": "color-basic-900",
+            "textFontSize": "text-caption-2-font-size",
+            "textFontWeight": "text-subtitle-1-font-weight",
+            "textFontFamily": "text-subtitle-1-font-family",
+            "state": {
+              "selected": {
+                "textColor": "text-primary-color",
+                "iconTintColor": "text-primary-color"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Button": {
+      "meta": {
+        "appearances": {
+          "round": {
+            "default": false
+          },
+          "iconButton": {
+            "default": false
+          }
+        },
+        "variantGroups": {}
+      },
+      "appearances": {
+        "filled": {
+          "mapping": {
+            "textFontFamily": "text-label-font-family"
+          },
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "borderColor": "#C3C3C3",
+                "backgroundColor": "#C3C3C3",
+                "textColor": "color-basic-100",
+                "iconTintColor": "color-basic-100",
+                "state": {
+                  "focused": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  },
+                  "hover": {
+                    "borderColor": "#ECECEC",
+                    "backgroundColor": "#ECECEC"
+                  },
+                  "active": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  }
+                }
+              },
+              "primary": {
+                "state": {
+                  "disabled": {
+                    "borderColor": "#C3C3C3",
+                    "backgroundColor": "#C3C3C3",
+                    "textColor": "color-basic-100",
+                    "iconTintColor": "color-basic-100"
+                  }
+                }
+              }
+            },
+            "size": {
+              "tiny": {
+                "minWidth": "size-tiny",
+                "minHeight": "size-tiny",
+                "paddingHorizontal": 12,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "small": {
+                "minWidth": "size-small",
+                "minHeight": "size-small",
+                "paddingHorizontal": 16,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "medium": {
+                "minWidth": "size-medium",
+                "minHeight": "size-medium",
+                "paddingHorizontal": 20,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "large": {
+                "minWidth": "size-large",
+                "minHeight": "size-large",
+                "paddingHorizontal": 20,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "giant": {
+                "minWidth": "size-giant",
+                "minHeight": "size-giant",
+                "paddingHorizontal": 24,
+                "textFontWeight": "text-label-font-weight"
+              }
+            }
+          }
+        },
+        "outline": {
+          "mapping": {
+            "textFontFamily": "text-label-font-family"
+          },
+          "variantGroups": {
+            "size": {
+              "tiny": {
+                "minWidth": "size-tiny",
+                "minHeight": "size-tiny",
+                "paddingHorizontal": 12,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "small": {
+                "minWidth": "size-small",
+                "minHeight": "size-small",
+                "paddingHorizontal": 16,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "medium": {
+                "minWidth": "size-medium",
+                "minHeight": "size-medium",
+                "paddingHorizontal": 20,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "large": {
+                "minWidth": "size-large",
+                "minHeight": "size-large",
+                "paddingHorizontal": 20,
+                "textFontWeight": "text-label-font-weight"
+              },
+              "giant": {
+                "minWidth": "size-giant",
+                "minHeight": "size-giant",
+                "paddingHorizontal": 24,
+                "textFontWeight": "text-label-font-weight"
+              }
+            }
+          }
+        },
+        "round": {
+          "mapping": {
+            "textFontFamily": "text-label-font-family",
+            "iconMarginHorizontal": 4
+          },
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "borderColor": "#C3C3C3",
+                "backgroundColor": "#C3C3C3",
+                "textColor": "color-basic-100",
+                "iconTintColor": "color-basic-100",
+                "state": {
+                  "focused": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  },
+                  "hover": {
+                    "borderColor": "#ECECEC",
+                    "backgroundColor": "#ECECEC"
+                  },
+                  "active": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  },
+                  "disabled": {
+                    "borderColor": "color-basic-disabled-border",
+                    "backgroundColor": "color-basic-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "primary": {
+                "borderColor": "color-primary-default-border",
+                "backgroundColor": "color-primary-default",
+                "textColor": "text-control-color",
+                "iconTintColor": "text-control-color",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-primary-focus-border",
+                    "backgroundColor": "color-primary-focus"
+                  },
+                  "hover": {
+                    "borderColor": "color-primary-hover-border",
+                    "backgroundColor": "color-primary-hover"
+                  },
+                  "active": {
+                    "borderColor": "color-primary-active-border",
+                    "backgroundColor": "color-primary-active"
+                  },
+                  "disabled": {
+                    "borderColor": "#C3C3C3",
+                    "backgroundColor": "#C3C3C3",
+                    "textColor": "color-basic-100",
+                    "iconTintColor": "color-basic-100"
+                  }
+                }
+              },
+              "success": {
+                "borderColor": "color-success-default-border",
+                "backgroundColor": "color-success-default",
+                "textColor": "text-control-color",
+                "iconTintColor": "text-control-color",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-success-focus-border",
+                    "backgroundColor": "color-success-focus"
+                  },
+                  "hover": {
+                    "borderColor": "color-success-hover-border",
+                    "backgroundColor": "color-success-hover"
+                  },
+                  "active": {
+                    "borderColor": "color-success-active-border",
+                    "backgroundColor": "color-success-active"
+                  },
+                  "disabled": {
+                    "borderColor": "color-success-disabled-border",
+                    "backgroundColor": "color-success-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "info": {
+                "borderColor": "color-info-default-border",
+                "backgroundColor": "color-info-default",
+                "textColor": "text-control-color",
+                "iconTintColor": "text-control-color",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-info-focus-border",
+                    "backgroundColor": "color-info-focus"
+                  },
+                  "hover": {
+                    "borderColor": "color-info-hover-border",
+                    "backgroundColor": "color-info-hover"
+                  },
+                  "active": {
+                    "borderColor": "color-info-active-border",
+                    "backgroundColor": "color-info-active"
+                  },
+                  "disabled": {
+                    "borderColor": "color-info-disabled-border",
+                    "backgroundColor": "color-info-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "warning": {
+                "borderColor": "color-warning-default-border",
+                "backgroundColor": "color-warning-default",
+                "textColor": "text-control-color",
+                "iconTintColor": "text-control-color",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-warning-focus-border",
+                    "backgroundColor": "color-warning-focus"
+                  },
+                  "hover": {
+                    "borderColor": "color-warning-hover-border",
+                    "backgroundColor": "color-warning-hover"
+                  },
+                  "active": {
+                    "borderColor": "color-warning-active-border",
+                    "backgroundColor": "color-warning-active"
+                  },
+                  "disabled": {
+                    "borderColor": "color-warning-disabled-border",
+                    "backgroundColor": "color-warning-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "danger": {
+                "borderColor": "color-danger-default-border",
+                "backgroundColor": "color-danger-default",
+                "textColor": "text-control-color",
+                "iconTintColor": "text-control-color",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-danger-focus-border",
+                    "backgroundColor": "color-danger-focus"
+                  },
+                  "hover": {
+                    "borderColor": "color-danger-hover-border",
+                    "backgroundColor": "color-danger-hover"
+                  },
+                  "active": {
+                    "borderColor": "color-danger-active-border",
+                    "backgroundColor": "color-danger-active"
+                  },
+                  "disabled": {
+                    "borderColor": "color-danger-disabled-border",
+                    "backgroundColor": "color-danger-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              },
+              "control": {
+                "borderColor": "color-control-default-border",
+                "backgroundColor": "color-control-default",
+                "textColor": "color-basic-800",
+                "iconTintColor": "color-basic-800",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-control-focus-border",
+                    "backgroundColor": "color-control-focus"
+                  },
+                  "hover": {
+                    "borderColor": "color-control-hover-border",
+                    "backgroundColor": "color-control-hover"
+                  },
+                  "active": {
+                    "borderColor": "color-control-active-border",
+                    "backgroundColor": "color-control-active"
+                  },
+                  "disabled": {
+                    "borderColor": "color-control-disabled-border",
+                    "backgroundColor": "color-control-disabled",
+                    "textColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              }
+            },
+            "size": {
+              "tiny": {
+                "minWidth": "size-tiny",
+                "minHeight": "size-tiny",
+                "borderRadius": "border-radius-round",
+                "borderWidth": "border-width",
+                "paddingHorizontal": 12,
+                "paddingVertical": 6,
+                "textMarginHorizontal": 6,
+                "textFontSize": 10,
+                "textFontWeight": "text-label-font-weight",
+                "iconWidth": 12,
+                "iconHeight": 12,
+                "iconMarginHorizontal": 6
+              },
+              "small": {
+                "minWidth": "size-small",
+                "minHeight": "size-small",
+                "borderRadius": "border-radius-round",
+                "borderWidth": "border-width",
+                "paddingHorizontal": 16,
+                "paddingVertical": 8,
+                "textMarginHorizontal": 8,
+                "textFontSize": 12,
+                "textFontWeight": "text-label-font-weight",
+                "iconWidth": 16,
+                "iconHeight": 16,
+                "iconMarginHorizontal": 8
+              },
+              "medium": {
+                "minWidth": "size-medium",
+                "minHeight": "size-medium",
+                "borderRadius": "border-radius-round",
+                "borderWidth": "border-width",
+                "paddingHorizontal": 20,
+                "paddingVertical": 12,
+                "textMarginHorizontal": 10,
+                "textFontSize": 14,
+                "textFontWeight": "text-label-font-weight",
+                "iconWidth": 20,
+                "iconHeight": 20,
+                "iconMarginHorizontal": 10
+              },
+              "large": {
+                "minWidth": "size-large",
+                "minHeight": "size-large",
+                "borderRadius": "border-radius-round",
+                "borderWidth": "border-width",
+                "paddingHorizontal": 20,
+                "paddingVertical": 14,
+                "textMarginHorizontal": 10,
+                "textFontSize": 16,
+                "textFontWeight": "text-label-font-weight",
+                "iconWidth": 24,
+                "iconHeight": 24,
+                "iconMarginHorizontal": 10
+              },
+              "giant": {
+                "minWidth": "size-giant",
+                "minHeight": "size-giant",
+                "borderRadius": "border-radius-round",
+                "borderWidth": "border-width",
+                "paddingHorizontal": 24,
+                "paddingVertical": 16,
+                "textMarginHorizontal": 12,
+                "textFontSize": 18,
+                "textFontWeight": "text-label-font-weight",
+                "iconWidth": 24,
+                "iconHeight": 24,
+                "iconMarginHorizontal": 12
+              }
+            }
+          }
+        },
+        "iconButton": {
+          "mapping": {
+            "textFontFamily": "text-label-font-family",
+            "iconMarginHorizontal": 0
+          },
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "borderColor": "color-primary-500",
+                "backgroundColor": "color-basic-100",
+                "textColor": "color-primary-500",
+                "iconTintColor": "color-primary-500",
+                "state": {
+                  "focused": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  },
+                  "hover": {
+                    "borderColor": "#ECECEC",
+                    "backgroundColor": "#ECECEC"
+                  },
+                  "active": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  }
+                }
+              }
+            },
+            "size": {
+              "tiny": {
+                "iconHeight": 28,
+                "iconWidth": 28,
+                "paddingHorizontal": 2,
+                "paddingVertical": 2,
+                "iconMarginHorizontal": 0
+              },
+              "small": {
+                "iconHeight": 32,
+                "iconWidth": 28,
+                "paddingHorizontal": 2,
+                "paddingVertical": 2,
+                "iconMarginHorizontal": 0
+              },
+              "medium": {
+                "iconHeight": 36,
+                "iconWidth": 36,
+                "paddingHorizontal": 2,
+                "paddingVertical": 2,
+                "iconMarginHorizontal": 0
+              },
+              "large": {
+                "iconHeight": 40,
+                "iconWidth": 40,
+                "paddingHorizontal": 3,
+                "paddingVertical": 3,
+                "iconMarginHorizontal": 0
+              },
+              "giant": {
+                "iconHeight": 44,
+                "iconWidth": 44,
+                "paddingHorizontal": 3,
+                "paddingVertical": 3,
+                "iconMarginHorizontal": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "Datepicker": {
+      "appearances": {
+        "default": {
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "textColor": "transparent",
+                "borderColor": "transparent",
+                "backgroundColor": "transparent",
+                "placeholderColor": "transparent",
+                "state": {
+                  "active": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "background-basic-color-1",
+                    "iconTintColor": "text-primary-color"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Divider": {
+      "appearances": {
+        "default": {
+          "mapping": {
+            "height": 0.5,
+            "backgroundColor": "#939393"
+          }
+        }
+      }
+    },
+    "Input": {
+      "appearances": {
+        "default": {
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "borderColor": "transparent",
+                "backgroundColor": "transparent",
+                "state": {
+                  "focused": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "background-basic-color-1",
+                    "iconTintColor": "text-primary-color"
+                  }
+                }
+              },
+              "control": {
+                "borderColor": "transparent",
+                "textColor": "text-basic-color",
+                "labelColor": "text-hint-color",
+                "iconTintColor": "text-hint-color",
+                "placeholderColor": "text-hint-color",
+                "backgroundColor": "color-basic-100",
+                "state": {
+                  "focused": {
+                    "borderColor": "color-primary-default",
+                    "backgroundColor": "background-basic-color-1",
+                    "iconTintColor": "text-primary-color"
+                  },
+                  "hover": {
+                    "borderColor": "border-basic-color-4",
+                    "backgroundColor": "background-basic-color-3"
+                  },
+                  "disabled": {
+                    "borderColor": "border-basic-color-4",
+                    "backgroundColor": "background-basic-color-2",
+                    "textColor": "text-disabled-color",
+                    "labelColor": "text-disabled-color",
+                    "captionColor": "text-disabled-color",
+                    "placeholderColor": "text-disabled-color",
+                    "iconTintColor": "text-disabled-color"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Select": {
+      "appearances": {
+        "default": {
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "borderColor": "transparent",
+                "backgroundColor": "transparent",
+                "textFontFamily": "text-font-family",
+                "state": {
+                  "focused": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "background-basic-color-1"
+                  },
+                  "active": {
+                    "borderColor": "transparent",
+                    "backgroundColor": "background-basic-color-1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tooltip": {
+      "appearances": {
+        "default": {
+          "mapping": {
+            "backgroundColor": "color-warning-default",
+            "borderColor": "color-warning-default",
+            "indicatorBackgroundColor": "color-warning-default",
+            "textFontSize": "text-paragraph-2-font-size",
+            "textFontWeight": "text-paragraph-2-font-weight",
+            "textFontFamily": "text-paragraph-2-font-family"
+          }
+        }
+      }
+    }
+  }
+}

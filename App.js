@@ -8,11 +8,21 @@ import { CacheUtil } from './utils/cache';
 import PushService from './PushService';
 import { linking } from './Linking';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
+import { ApplicationProvider, Layout, Button } from '@ui-kitten/components';
+import { ThemeContext } from './theme-context';
+import { Theme } from './utils/uikitten';
 import * as eva from '@eva-design/eva';
 
 const App = () => {
   const [token, setToken] = useState(null);
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    console.log(nextTheme);
+    setTheme(nextTheme);
+  };
+
 
   useEffect(() => {
     const getToken = async () => {
@@ -26,22 +36,25 @@ const App = () => {
 
   let routeName = (token == null) ? 'Login': 'Home';
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-        <StripeProvider
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+  <ApplicationProvider {...eva} theme={eva[theme]}>
+    <StripeProvider
         publishableKey={'pk_test_51MaxfDGgyCZxYRF2Yepz5WqEIXOCrW5DstyPkT2T0vOs9xquUP7r2quZYeS7ljoQdJSGFhyEVaNscG6AP8nCWOIO00t67uTLXK'}
         merchantIdentifier="merchant.identifier" // required for Apple Pay
         urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
       >
     <SafeAreaProvider>
-      <CodePushLoading />
-      <PushService />
-      <NavigationContainer linking={linking}>
+    <NavigationContainer linking={linking}>
         <StackNavigator name={routeName}/>
       </NavigationContainer>
+      <CodePushLoading />
+      <PushService />
+      
     </SafeAreaProvider>
-  </StripeProvider>
-  </ApplicationProvider>
-
+    </StripeProvider>
+     
+    </ApplicationProvider>
+    </ThemeContext.Provider>
   );
 };
 
