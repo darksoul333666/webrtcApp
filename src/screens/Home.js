@@ -14,7 +14,6 @@ const HomeScreen = ({navigation}) => {
 
   const themeContext = useContext(ThemeContext);
 
-
     useEffect(() => {
       let idCall='123456';
       let typeUser='caller';
@@ -24,7 +23,6 @@ const HomeScreen = ({navigation}) => {
       // console.log('User data: ', Object.entries(snapshot?.val()));
       let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
       // handleRemoteCandidate(JSON.parse(candidate))
-
 
     });
     }, []);

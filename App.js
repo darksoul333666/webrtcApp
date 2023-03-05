@@ -45,7 +45,7 @@ const App = () => {
       >
     <SafeAreaProvider>
     <NavigationContainer linking={linking}>
-        <StackNavigator name={routeName}/>
+        <StackNavigator name={"Home"}/>
       </NavigationContainer>
       <CodePushLoading />
       <PushService />

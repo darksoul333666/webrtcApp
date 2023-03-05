@@ -16,10 +16,15 @@ const LoginScreen = ({navigation}) => {
         getToken()
     },[])
     return(
-    <View>
-        <GoogleButtonSignIn
+    <View style={{flex:1, marginTop:100}} >
+        {/* <GoogleButtonSignIn
         navigation={navigation}
-        />
+        /> */}
+        <Button
+        onPress={() => {
+            se
+        }}
+        >Press</Button>
     </View>
 );
 }

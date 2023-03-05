@@ -8,7 +8,7 @@ import {
 } from 'react-native-gifted-chat';
 import { Colors } from '../../utils/theme';
 import { Container } from '../components';
-import { Avatar } from 'react-native-elements';
+import { Avatar } from '@rneui/themed';
 import { Layout, useTheme } from '@ui-kitten/components';
 // import { pushNotifications } from '../../services';
 import { Fonts } from '../../utils/config/Constants';
@@ -149,17 +149,14 @@ const ChatScreen = ({ route, navigation, onClose }) => {
   };
 
   const renderInput = props => (
-    <Layout style={{height:30, position:'absolute', borderRadius:25, width:"100%", bottom:0}} > 
       <InputToolbar
       {...props}
-      textInputStyle={{color:'black'}}
-      primaryStyle={{color:'black'}}
+    
       containerStyle={[
-        { backgroundColor: 'transparent' },
+        // { backgroundColor: 'transparent' },
         styles.inputToolbarStyles,
       ]}
     />
-    </Layout>
   );
 
   const renderComposer = props => (
@@ -179,21 +176,11 @@ const ChatScreen = ({ route, navigation, onClose }) => {
   );
 
   const renderSend = props => (
-    <Layout style={{ backgroundColor: Colors.grayLight, marginTop: -1 }}>
+    <View style={{ backgroundColor: Colors.grayLight, marginTop: -1 }}>
       <Send {...props} containerStyle={styles.sendBtnStyles}>
-        <Avatar
-          rounded
-          size={48}
-          icon={{
-            name: 'paper-plane',
-            type: 'font-awesome',
-          }}
-          overlayContainerStyle={{
-            backgroundColor: theme['color-primary-default'],
-          }}
-        />
+       
       </Send>
-    </Layout>
+    </View>
   );
 
   return (
@@ -260,15 +247,15 @@ const styles = StyleSheet.create({
   textMsgRight: {
     fontSize: 14,
     // marginRight: 50,
-    fontFamily: Fonts.medium,
+    // fontFamily: Fonts.medium,
   },
   textMsgLeft: {
     fontSize: 14,
-    fontFamily: Fonts.medium,
+    // fontFamily: Fonts.medium,
   },
   composerStyles: {
     fontSize: 16,
-    fontFamily: Fonts.medium,
+    // fontFamily: Fonts.medium,
     borderRadius: 25,
     minHeight: 48,
     paddingVertical: 11,
