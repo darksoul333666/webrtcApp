@@ -4,55 +4,55 @@
 
     "text-heading-1-font-size": 42,
     "text-heading-1-font-weight": "800",
-    "text-heading-1-font-family": "ProximaNova-Black",
+    "text-heading-1-font-family": "Poppins-Black",
 
     "text-heading-2-font-size": 38,
     "text-heading-2-font-weight": "800",
-    "text-heading-2-font-family": "ProximaNova-Black",
+    "text-heading-2-font-family": "Poppins-Black",
 
     "text-heading-3-font-size": 34,
     "text-heading-3-font-weight": "800",
-    "text-heading-3-font-family": "ProximaNova-Black",
+    "text-heading-3-font-family": "Poppins-Black",
 
     "text-heading-4-font-size": 30,
     "text-heading-4-font-weight": "800",
-    "text-heading-4-font-family": "ProximaNova-Black",
+    "text-heading-4-font-family": "Poppins-Black",
 
     "text-heading-5-font-size": 26,
     "text-heading-5-font-weight": "800",
-    "text-heading-5-font-family": "ProximaNova-Black",
+    "text-heading-5-font-family": "Poppins-Black",
 
     "text-heading-6-font-size": 22,
     "text-heading-6-font-weight": "800",
-    "text-heading-6-font-family": "ProximaNova-Black",
+    "text-heading-6-font-family": "Poppins-Black",
 
     "text-subtitle-1-font-size": 16,
     "text-subtitle-1-font-weight": "800",
-    "text-subtitle-1-font-family": "ProximaNova-Bold",
+    "text-subtitle-1-font-family": "Poppins-Bold",
 
     "text-subtitle-2-font-size": 14,
     "text-subtitle-2-font-weight": "600",
-    "text-subtitle-2-font-family": "ProximaNova-Bold",
+    "text-subtitle-2-font-family": "Poppins-Bold",
 
     "text-paragraph-1-font-size": 16,
     "text-paragraph-1-font-weight": "400",
-    "text-paragraph-1-font-family": "ProximaNova-Medium",
+    "text-paragraph-1-font-family": "Poppins-Medium",
 
     "text-paragraph-2-font-size": 14,
     "text-paragraph-2-font-weight": "400",
-    "text-paragraph-2-font-family": "ProximaNova-Medium",
+    "text-paragraph-2-font-family": "Poppins-Medium",
 
     "text-caption-1-font-size": 12,
     "text-caption-1-font-weight": "400",
-    "text-caption-1-font-family": "ProximaNova-Regular",
+    "text-caption-1-font-family": "Poppins-Regular",
 
     "text-caption-2-font-size": 11,
     "text-caption-2-font-weight": "400",
-    "text-caption-2-font-family": "ProximaNova-Regular",
+    "text-caption-2-font-family": "Poppins-Regular",
 
     "text-label-font-size": 16,
     "text-label-font-weight": "800",
-    "text-label-font-family": "ProximaNova-Black",
+    "text-label-font-family": "Poppins-Black",
 
     "size-tiny": 24,
     "size-small": 30,

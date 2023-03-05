@@ -1,10 +1,10 @@
 export const Fonts = {
-  bold: 'ProximaNova-Bold',
-  thin: 'ProximaNova-Thin',
-  black: 'ProximaNova-Black',
-  medium: 'ProximaNova-Medium',
-  regular: 'ProximaNova-Regular',
-  extrabold: 'ProximaNova-Extrabold',
+  bold: 'Poppins-Bold',
+  thin: 'Poppins-Thin',
+  black: 'Poppins-Black',
+  medium: 'Poppins-Medium',
+  regular: 'Poppins-Regular',
+  extrabold: 'Poppins-Extrabold',
 };
 
 export const DefaultPhoto =
