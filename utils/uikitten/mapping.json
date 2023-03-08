@@ -1,6 +1,6 @@
 {
   "strict": {
-    "text-font-family": "ProximaNova-Regular",
+    "text-font-family": "Poppins-Regular",
 
     "text-heading-1-font-size": 42,
     "text-heading-1-font-weight": "800",
@@ -10,8 +10,8 @@
     "text-heading-2-font-weight": "800",
     "text-heading-2-font-family": "Poppins-Black",
 
-    "text-heading-3-font-size": 34,
-    "text-heading-3-font-weight": "800",
+    "text-heading-3-font-size": 38,
+    "text-heading-3-font-weight": "700",
     "text-heading-3-font-family": "Poppins-Black",
 
     "text-heading-4-font-size": 30,
@@ -88,6 +88,9 @@
       "meta": {
         "appearances": {
           "round": {
+            "mapping":{
+              "backgroundColor":"#A671E3"
+            },
             "default": false
           },
           "iconButton": {
@@ -104,8 +107,9 @@
           "variantGroups": {
             "status": {
               "basic": {
-                "borderColor": "#C3C3C3",
-                "backgroundColor": "#C3C3C3",
+                "borderColor": "#A671E3",
+                "backgroundColor": "#A671E3",
+                "borderRadius":25,
                 "textColor": "color-basic-100",
                 "iconTintColor": "color-basic-100",
                 "state": {
@@ -124,12 +128,23 @@
                 }
               },
               "primary": {
+                "borderColor": "#ffffff",
+                "backgroundColor": "#ffffff",
+                "textColor": "#A671E3",
+                "iconTintColor": "A671E3",
                 "state": {
-                  "disabled": {
-                    "borderColor": "#C3C3C3",
-                    "backgroundColor": "#C3C3C3",
-                    "textColor": "color-basic-100",
-                    "iconTintColor": "color-basic-100"
+                  "focused": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB"
+                  },
+                  "hover": {
+                    "borderColor": "#ECECEC",
+                    "backgroundColor": "#ECECEC"
+                  },
+                  "active": {
+                    "borderColor": "#ABABAB",
+                    "backgroundColor": "#ABABAB",
+                    "textColor": "#ffffff"
                   }
                 }
               }
