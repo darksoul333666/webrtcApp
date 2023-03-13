@@ -37,7 +37,7 @@ const App = () => {
   let routeName = (token == null) ? 'Login': 'Home';
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-  <ApplicationProvider {...eva} theme={{...eva.light, ...Theme}} customMapping={Mapping}>
+  <ApplicationProvider {...eva} theme={{...eva.dark, ...Theme}} customMapping={Mapping}>
     <StripeProvider
         publishableKey={'pk_test_51MaxfDGgyCZxYRF2Yepz5WqEIXOCrW5DstyPkT2T0vOs9xquUP7r2quZYeS7ljoQdJSGFhyEVaNscG6AP8nCWOIO00t67uTLXK'}
         merchantIdentifier="merchant.identifier" // required for Apple Pay

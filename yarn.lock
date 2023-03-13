@@ -6913,10 +6913,10 @@
   dependencies:
     "prop-types" "^15.7.2"
 
-"react-native-loud-speaker@^1.0.4":
-  "integrity" "sha512-DFiQpzEBmaK0TWSSklKegDJrJ48dh+YAROT/OU2IgUBOM+KvehHbz5tM7T5xdmJzSfpRd5b4F8uDyxXMHbSuHQ=="
-  "resolved" "https://registry.npmjs.org/react-native-loud-speaker/-/react-native-loud-speaker-1.0.4.tgz"
-  "version" "1.0.4"
+"react-native-linear-gradient@^2.6.2":
+  "integrity" "sha512-Z8Xxvupsex+9BBFoSYS87bilNPWcRfRsGC0cpJk72Nxb5p2nEkGSBv73xZbEHnW2mUFvP+huYxrVvjZkr/gRjQ=="
+  "resolved" "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.6.2.tgz"
+  "version" "2.6.2"
 
 "react-native-parsed-text@0.0.22":
   "integrity" "sha512-hfD83RDXZf9Fvth3DowR7j65fMnlqM9PpxZBGWkzVcUTFtqe6/yPcIoIAgrJbKn6YmtzkivmhWE2MCE4JKBXrQ=="

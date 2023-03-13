@@ -4,7 +4,7 @@ import {
   Text
 } from '@ui-kitten/components';
 // import ScrollView from './ScrollView';
-import { StatusBar,ImageBackground, StyleSheet, View, Dimensions, PanResponder, Modal, Animated } from 'react-native';
+import { StatusBar,ImageBackground, StyleSheet, View, Dimensions, PanResponder, Modal, Animated, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const { height, width } = Dimensions.get('window');
 import { Styles } from '../utils/config';
@@ -15,7 +15,7 @@ import { faBarsSort } from '@fortawesome/pro-solid-svg-icons';
 import { Avatar } from 'react-native-elements';
 import { CacheUtil } from '../../../utils/cache';
 import { GoogleButtonSignIn } from '../../../services/auth-services';
-
+import LinearGradient from 'react-native-linear-gradient';
 const ContainerComponent = ({
   children,
   withBar,
@@ -110,21 +110,35 @@ const ContainerComponent = ({
   },[])
 
   return (
-    <ImageBackground source={image} style={{ flex: 1 }} resizeMode='cover' >
-
+    <View style={{flex:1}} >
+  <Image source={image} style={[{ width:width,
+    height:300, },
+    StyleSheet.absoluteFillObject
+    ]} resizeMode='cover' />
     <SafeAreaView
       style={{
         flex: 1,
         // ...ifIphoneX(withMarginIOS && { marginBottom: -70 }),
         // backgroundColor:  withBar?.colorBar || theme['color-basic-100'],
-      }}
-      // onResponderGrant={drawerOpened ? toggleOpen : undefined}
-      // onStartShouldSetResponder={drawerOpened ? toggleOpen : undefined}
-    >
-      <View style={{width:width, display:'flex', flexDirection:'row'}} >
-     <View style={ {flex:10, justifyContent:'center' }} >
-     <FontAwesomeIcon icon={faBarsSort} size={30} style={{ marginLeft:10, color: 'white' }} />
-     </View>
+      }}>
+        <View style={{marginTop:300, flex:1, backgroundColor:'green'}} > 
+        <LinearGradient
+      style={{flex:1}}
+      start={{ x: 0, y: 0.6 }}
+      end={{ x: 0, y: 1 }}
+      colors={['black', '#e3e1e2']}>
+        <Text>Holaaaaaaa</Text>
+      </LinearGradient>
+        </View>
+        <View>
+          
+          </View>
+      </SafeAreaView>
+   
+      {/* <View style={{width:width, flex:1,  display:'flex', flexDirection:'row'}} >
+    <View style={ {flex:10, justifyContent:'center' }} >
+    <FontAwesomeIcon icon={faBarsSort} size={30} style={{ marginLeft:10, color: 'white' }} />
+    </View>
       <View style={{flexDirection:'row', justifyContent:'space-between', flex:8, alignItems:'center'}} >
         <Text numberOfLines={1} style={{width:"70%"}} >Hola, Jairo</Text>
         <Avatar
@@ -133,12 +147,10 @@ const ContainerComponent = ({
         />
       </View>
       </View>
-        <View style={{ flex: 1,}}>
+      <View style={{ flex: 1,}}>
         {withScroll ? <ScrollView  >{children}</ScrollView> : children}
-      </View>
-    </SafeAreaView>
-    </ImageBackground>
-
+      </View> */}
+    </View>
   );
 };
 

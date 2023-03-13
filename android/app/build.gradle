@@ -272,7 +272,6 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':react-native-vector-icons')
-    implementation project(':react-native-loud-speaker')
     implementation "com.braintreepayments.api:braintree:3.14.1"
     implementation "androidx.appcompat:appcompat:1.5.1"
     implementation 'com.google.android.material:material:1.8.0'

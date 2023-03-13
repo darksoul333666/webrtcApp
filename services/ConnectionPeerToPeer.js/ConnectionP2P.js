@@ -4,7 +4,6 @@ import messaging from '@react-native-firebase/messaging';
 import { API, ROUTES } from '../../api';
 import { mediaConstraints, peerConstraints, sessionConstraints } from './Constants';
 import database from '@react-native-firebase/database';
-import LoudSpeaker from 'react-native-loud-speaker';
 import {
     RTCPeerConnection,
     RTCIceCandidate,
@@ -120,10 +119,6 @@ const ConnectionP2P = ({
         };
       localMediaStream !== null ? handleMicrophone() : null;
     }, [microphoneEnabled]);
-
-    useEffect(() => {
-       LoudSpeaker.open(speakerEnabled);
-    }, [speakerEnabled]);
 
     useEffect(() => {
      hangoutCall ? destroyMedia() : null
