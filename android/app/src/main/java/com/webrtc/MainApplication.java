@@ -15,7 +15,6 @@ import com.webrtc.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.loudspeaker.LoudSpeakerPackage;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { EvaluationScreen, HomeScreen } from '../src/screens';
+import { EvaluationScreen, HomeScreen, Therapy } from '../src/screens';
 import { LoginScreen } from '../src/screens';
 import { CallScreen } from '../src/screens';
 import { AudioScreen } from '../src/screens/components';
@@ -27,7 +27,7 @@ const StackNavigator = ({name}) => {
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="Evaluation" component={EvaluationScreen} />
         <Stack.Screen name="ContentLibrary" component={ContentLibraryScreen} />
-
+        <Stack.Screen name="Therapy" component={Therapy} />
 
         {/* <Stack.Screen name="Stripe" component={StripeScreen} />
         <Stack.Screen name="Mercado" component={WebComponent} /> */}

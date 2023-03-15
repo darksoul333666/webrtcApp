@@ -15,7 +15,7 @@
     "text-heading-3-font-family": "Poppins-Black",
 
     "text-heading-4-font-size": 30,
-    "text-heading-4-font-weight": "800",
+    "text-heading-4-font-weight": "700",
     "text-heading-4-font-family": "Poppins-Black",
 
     "text-heading-5-font-size": 26,
@@ -153,31 +153,33 @@
               "tiny": {
                 "minWidth": "size-tiny",
                 "minHeight": "size-tiny",
-                "paddingHorizontal": 12,
-                "textFontWeight": "text-label-font-weight"
+                "paddingHorizontal": 8,
+                "textFontWeight": "text-label-font-weight",
+                "borderRadius":25
               },
               "small": {
                 "minWidth": "size-small",
                 "minHeight": "size-small",
-                "paddingHorizontal": 16,
-                "textFontWeight": "text-label-font-weight"
+                "paddingHorizontal": 8,
+                "textFontWeight": "text-label-font-weight",
+                "borderRadius":25
               },
               "medium": {
                 "minWidth": "size-medium",
                 "minHeight": "size-medium",
-                "paddingHorizontal": 20,
+                "paddingHorizontal": 14,
                 "textFontWeight": "text-label-font-weight"
               },
               "large": {
                 "minWidth": "size-large",
                 "minHeight": "size-large",
-                "paddingHorizontal": 20,
+                "paddingHorizontal": 16,
                 "textFontWeight": "text-label-font-weight"
               },
               "giant": {
                 "minWidth": "size-giant",
                 "minHeight": "size-giant",
-                "paddingHorizontal": 24,
+                "paddingHorizontal": 18,
                 "textFontWeight": "text-label-font-weight"
               }
             }
@@ -662,6 +664,212 @@
         }
       }
     },
+    "Text": {
+      "meta": {
+          "scope": "all",
+          "parameters": {
+              "fontFamily": {
+                  "type": "string"
+              },
+              "fontSize": {
+                  "type": "number"
+              },
+              "fontWeight": {
+                  "type": "string"
+              },
+              "color": {
+                  "type": "string"
+              }
+          },
+          "appearances": {
+              "default": {
+                  "default": true
+              },
+              "alternative": {
+                  "default": false
+              },
+              "hint": {
+                  "default": false
+              }
+          },
+          "variantGroups": {
+              "category": {
+                  "h1": {
+                      "default": false
+                  },
+                  "h2": {
+                      "default": false
+                  },
+                  "h3": {
+                      "default": false
+                  },
+                  "h4": {
+                      "default": false
+                  },
+                  "h5": {
+                      "default": false
+                  },
+                  "h6": {
+                      "default": false
+                  },
+                  "s1": {
+                      "default": false
+                  },
+                  "s2": {
+                      "default": false
+                  },
+                  "p1": {
+                      "default": true
+                  },
+                  "p2": {
+                      "default": false
+                  },
+                  "c1": {
+                      "default": false
+                  },
+                  "c2": {
+                      "default": false
+                  },
+                  "label": {
+                      "default": false
+                  }
+              },
+              "status": {
+                  "basic": {
+                      "default": false
+                  },
+                  "primary": {
+                      "default": false
+                  },
+                  "success": {
+                      "default": false
+                  },
+                  "info": {
+                      "default": false
+                  },
+                  "warning": {
+                      "default": false
+                  },
+                  "danger": {
+                      "default": false
+                  },
+                  "control": {
+                      "default": false
+                  }
+              }
+          },
+          "states": {}
+      },
+      "appearances": {
+          "default": {
+              "mapping": {
+                  "color": "text-basic-color"
+              },
+              "variantGroups": {
+                  "category": {
+                      "h1": {
+                          "fontSize": "text-heading-1-font-size",
+                          "fontWeight": "text-heading-1-font-weight",
+                          "fontFamily": "text-heading-1-font-family"
+                      },
+                      "h2": {
+                          "fontSize": "text-heading-2-font-size",
+                          "fontWeight": "text-heading-2-font-weight",
+                          "fontFamily": "text-heading-2-font-family"
+                      },
+                      "h3": {
+                          "fontSize": "text-heading-3-font-size",
+                          "fontWeight": "text-heading-3-font-weight",
+                          "fontFamily": "text-heading-3-font-family"
+                      },
+                      "h4": {
+                          "fontSize": "text-heading-4-font-size",
+                          "fontWeight": "text-heading-4-font-weight",
+                          "fontFamily": "text-heading-4-font-family"
+                      },
+                      "h5": {
+                          "fontSize": "text-heading-5-font-size",
+                          "fontWeight": "text-heading-5-font-weight",
+                          "fontFamily": "text-heading-5-font-family"
+                      },
+                      "h6": {
+                          "fontSize": "text-heading-6-font-size",
+                          "fontWeight": "text-heading-6-font-weight",
+                          "fontFamily": "text-heading-6-font-family"
+                      },
+                      "s1": {
+                          "fontSize": "text-subtitle-1-font-size",
+                          "fontWeight": "text-subtitle-1-font-weight",
+                          "fontFamily": "text-subtitle-1-font-family"
+                      },
+                      "s2": {
+                          "fontSize": "text-subtitle-2-font-size",
+                          "fontWeight": "text-subtitle-2-font-weight",
+                          "fontFamily": "text-subtitle-2-font-family"
+                      },
+                      "p1": {
+                          "fontSize": "text-paragraph-1-font-size",
+                          "fontWeight": "text-paragraph-1-font-weight",
+                          "fontFamily": "text-paragraph-1-font-family"
+                      },
+                      "p2": {
+                          "fontSize": "text-paragraph-2-font-size",
+                          "fontWeight": "text-paragraph-2-font-weight",
+                          "fontFamily": "text-paragraph-2-font-family"
+                      },
+                      "c1": {
+                          "fontSize": "text-caption-1-font-size",
+                          "fontWeight": "text-caption-1-font-weight",
+                          "fontFamily": "text-caption-1-font-family"
+                      },
+                      "c2": {
+                          "fontSize": "text-caption-2-font-size",
+                          "fontWeight": "text-caption-2-font-weight",
+                          "fontFamily": "text-caption-2-font-family"
+                      },
+                      "label": {
+                          "fontSize": "text-label-font-size",
+                          "fontWeight": "text-label-font-weight",
+                          "fontFamily": "text-label-font-family"
+                      }
+                  },
+                  "status": {
+                      "basic": {
+                          "color": "text-basic-color"
+                      },
+                      "primary": {
+                          "color": "text-primary-color"
+                      },
+                      "success": {
+                          "color": "text-success-color"
+                      },
+                      "info": {
+                          "color": "text-info-color"
+                      },
+                      "warning": {
+                          "color": "text-warning-color"
+                      },
+                      "danger": {
+                          "color": "text-danger-color"
+                      },
+                      "control": {
+                          "color": "text-control-color"
+                      }
+                  }
+              }
+          },
+          "alternative": {
+              "mapping": {
+                  "color": "text-alternate-color"
+                              }
+          },
+          "hint": {
+              "mapping": {
+                  "color": "text-hint-color"
+              }
+          }
+      }
+  },
     "Tooltip": {
       "appearances": {
         "default": {

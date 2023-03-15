@@ -9,7 +9,7 @@ export default StyleSheet.create({
   contentCenter: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   container: {
     flex: 1,
@@ -25,5 +25,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textHeader: { 
+    lineHeight: 35,  
+    
+    marginTop:20 }
   
 });

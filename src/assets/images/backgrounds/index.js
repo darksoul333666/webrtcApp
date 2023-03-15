@@ -1,6 +1,7 @@
 module.exports = {
-    Background1 : require('./bac1.png'),
-    background2 : require('./bac2.png'),
-    background3 : require('./bac3.png')
+    Background1 : require('./back1.png'),
+    background2 : require('./back2.png'),
+    background3 : require('./back3.png'),
+    backgroundLogin: require('./backlogin.png')
 
 }

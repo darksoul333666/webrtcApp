@@ -45,7 +45,10 @@ const App = () => {
       >
     <SafeAreaProvider>
     <NavigationContainer linking={linking}>
-        <StackNavigator name={"ContentLibrary"}/>
+        {/* <StackNavigator name={"Evaluation"}/> */}
+        {/* <StackNavigator name={"Home"}/> */}
+        <StackNavigator name={"Therapy"}/>
+        {/* <StackNavigator name={"ContentLibrary"}/> */}
       </NavigationContainer>
       <CodePushLoading />
       <PushService />

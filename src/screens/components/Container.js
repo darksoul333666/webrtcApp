@@ -3,8 +3,8 @@ import {
   Layout,
   Text
 } from '@ui-kitten/components';
-// import ScrollView from './ScrollView';
-import { StatusBar,ImageBackground, StyleSheet, View, Dimensions, PanResponder, Modal, Animated, Image } from 'react-native';
+import ScrollView from './ScrollView';
+import { StatusBar, ImageBackground, StyleSheet, View, Dimensions, PanResponder, Modal, Animated, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const { height, width } = Dimensions.get('window');
 import { Styles } from '../utils/config';
@@ -15,7 +15,6 @@ import { faBarsSort } from '@fortawesome/pro-solid-svg-icons';
 import { Avatar } from 'react-native-elements';
 import { CacheUtil } from '../../../utils/cache';
 import { GoogleButtonSignIn } from '../../../services/auth-services';
-import LinearGradient from 'react-native-linear-gradient';
 const ContainerComponent = ({
   children,
   withBar,
@@ -25,7 +24,7 @@ const ContainerComponent = ({
 }) => {
   const themeContext = useContext(ThemeContext);
   const theme = useTheme()
-  const [user,setUser] = useState({});
+  const [user, setUser] = useState({});
   // const HeaderIcon = data => {
   //   return (
   //     <TouchableOpacity onPress={data?.onPress}>
@@ -45,7 +44,7 @@ const ContainerComponent = ({
 
   // const HeaderTitle = (Title, id = null) => {
   //   if (typeof Title === 'string') {
-    
+
   //       return (
   //         <View style={{flex:1, flexDirection:'row', alignItems:'flex-end' }} >
   //           <View style={{ flexDirection:'column', display:'flex', justifyContent:'center' }} >
@@ -66,7 +65,7 @@ const ContainerComponent = ({
   // const TopActionLeft = data => {
   //   return (
   //       <TouchableOpacity onPress={() => toggleOpen()} >
-           
+
   //             {/* <View style={Styles.iconTab} >
 
   //             </View> */}
@@ -81,13 +80,13 @@ const ContainerComponent = ({
   //         <TopNavigationAction
   //           onPress={data?.onPress}
   //           icon={() => HeaderIcon(data)}
-            
+
   //         />
   //       );
   //     } else {
   //       return (
   //           <View style={{flexDirection:'column', justifyContent:'center', alignItems:'center'}} >
-                
+
   //                  <Text
   //                   category="h6"
   //                   status="primary"
@@ -101,61 +100,49 @@ const ContainerComponent = ({
   //   return undefined;
   // };
 
-  useEffect(()=>{
+  useEffect(() => {
     getData = async () => {
       setUser(await CacheUtil.getUser())
       console.log(await CacheUtil.getUser());
     };
     getData()
-  },[])
+  }, [])
 
   return (
-    <View style={{flex:1}} >
-  <Image source={image} style={[{ width:width,
-    height:300, },
-    StyleSheet.absoluteFillObject
-    ]} resizeMode='cover' />
-    <SafeAreaView
-      style={{
-        flex: 1,
-        // ...ifIphoneX(withMarginIOS && { marginBottom: -70 }),
-        // backgroundColor:  withBar?.colorBar || theme['color-basic-100'],
-      }}>
-        <View style={{marginTop:300, flex:1, backgroundColor:'green'}} > 
-        <LinearGradient
-      style={{flex:1}}
-      start={{ x: 0, y: 0.6 }}
-      end={{ x: 0, y: 1 }}
-      colors={['black', '#e3e1e2']}>
-        <Text>Holaaaaaaa</Text>
-      </LinearGradient>
-        </View>
-        <View>
-          
+    <ImageBackground style={{ flex: 1 }} source={image} resizeMode={'cover'} >
+        <StatusBar
+        barStyle={`light-content`}
+        animated={true}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          // ...ifIphoneX(withMarginIOS && { marginBottom: -70 }),
+          // backgroundColor:  withBar?.colorBar || theme['color-basic-100'],
+        }}>
+        <View style={{ width: "90%",  display: 'flex', alignSelf: 'center', flexDirection: 'row' }} >
+          <View style={{ flex: 1}} >
+            <FontAwesomeIcon icon={faBarsSort} size={30} style={{color: 'white' }} />
           </View>
+          <View style={{ flexDirection: 'row',   justifyContent: 'flex-end', flex: 8, alignItems: 'center' }} >
+            <Text numberOfLines={1} category='s1'  style={{ fontWeight:"700", marginRight:5, maxWidth:"60%"}}  >Hola, Jairo</Text>
+            <Avatar
+              rounded
+              source={{ uri: "https://scontent.fjal3-1.fna.fbcdn.net/v/t39.30808-6/310909154_1529289550839677_3792589022271603293_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=1623lSj-L-0AX9hcRXY&_nc_ht=scontent.fjal3-1.fna&oh=00_AfBntgF4odpFEzwBMWU7-lPPuErkVTduUiU8igDEMkO2QQ&oe=640B6B7E" }}
+            />
+          </View>
+        </View>
+        <View style={{ flex: 1, width:width*.9, alignSelf:'center' }}>
+          {withScroll ? <ScrollView  >{children}</ScrollView> : children}
+          {/* <ScrollView  >{children}</ScrollView> */}
+        </View>
       </SafeAreaView>
-   
-      {/* <View style={{width:width, flex:1,  display:'flex', flexDirection:'row'}} >
-    <View style={ {flex:10, justifyContent:'center' }} >
-    <FontAwesomeIcon icon={faBarsSort} size={30} style={{ marginLeft:10, color: 'white' }} />
-    </View>
-      <View style={{flexDirection:'row', justifyContent:'space-between', flex:8, alignItems:'center'}} >
-        <Text numberOfLines={1} style={{width:"70%"}} >Hola, Jairo</Text>
-        <Avatar
-        rounded
-          source={{uri: "https://scontent.fjal3-1.fna.fbcdn.net/v/t39.30808-6/310909154_1529289550839677_3792589022271603293_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=1623lSj-L-0AX9hcRXY&_nc_ht=scontent.fjal3-1.fna&oh=00_AfBntgF4odpFEzwBMWU7-lPPuErkVTduUiU8igDEMkO2QQ&oe=640B6B7E" }}
-        />
-      </View>
-      </View>
-      <View style={{ flex: 1,}}>
-        {withScroll ? <ScrollView  >{children}</ScrollView> : children}
-      </View> */}
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
- 
+
 });
 
 export default ContainerComponent;
