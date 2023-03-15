@@ -25,80 +25,14 @@ const ContainerComponent = ({
   const themeContext = useContext(ThemeContext);
   const theme = useTheme()
   const [user, setUser] = useState({});
-  // const HeaderIcon = data => {
-  //   return (
-  //     <TouchableOpacity onPress={data?.onPress}>
-  //     { !data?.component ?  <Icon
-  //         name={data?.name}
-  //         pack={data?.type}
-  //         solid={data?.solid}
-  //         style={{
-  //           tintColor: data?.color || theme['color-primary-500'],
-  //           ...styles.icon,
-  //           ...data?.style,
-  //         }}
-  //       /> : data?.component() }
-  //     </TouchableOpacity>
-  //   );
-  // };
 
-  // const HeaderTitle = (Title, id = null) => {
-  //   if (typeof Title === 'string') {
-
-  //       return (
-  //         <View style={{flex:1, flexDirection:'row', alignItems:'flex-end' }} >
-  //           <View style={{ flexDirection:'column', display:'flex', justifyContent:'center' }} >
-  //           <Text
-  //           category="h5"
-  //           status="primary"
-  //           numberOfLines={1}
-  //           maxFontSizeMultiplier={1}
-  //           style={{ marginRight: Title !== '' ? 10 : 0 }}>
-  //           {Title}
-  //         </Text>
-  //           </View>
-  //         </View>
-  //       );
-  //   }
-  // };
-
-  // const TopActionLeft = data => {
-  //   return (
-  //       <TouchableOpacity onPress={() => toggleOpen()} >
-
-  //             {/* <View style={Styles.iconTab} >
-
-  //             </View> */}
-
-  //     </TouchableOpacity>
-  //   );
-  // };
-  // const TopAction = data => {
-  //   if (data !== undefined ) {
-  //     if(data.isHoppiLogo == undefined){
-  //       return (
-  //         <TopNavigationAction
-  //           onPress={data?.onPress}
-  //           icon={() => HeaderIcon(data)}
-
-  //         />
-  //       );
-  //     } else {
-  //       return (
-  //           <View style={{flexDirection:'column', justifyContent:'center', alignItems:'center'}} >
-
-  //                  <Text
-  //                   category="h6"
-  //                   status="primary"
-  //                   numberOfLines={1}
-  //                   style={{  }}>hoppi</Text>
-  //           </View>
-  //       )
-  //     }
-
-  //   }
-  //   return undefined;
-  // };
+  useEffect(() => {
+    const getData = async() => {
+      setUser(await CacheUtil.getUser());
+      console.log(await CacheUtil.getUser());
+    }
+    getData()
+  },[])
 
   useEffect(() => {
     getData = async () => {
@@ -125,10 +59,10 @@ const ContainerComponent = ({
             <FontAwesomeIcon icon={faBarsSort} size={30} style={{color: 'white' }} />
           </View>
           <View style={{ flexDirection: 'row',   justifyContent: 'flex-end', flex: 8, alignItems: 'center' }} >
-            <Text numberOfLines={1} category='s1'  style={{ fontWeight:"700", marginRight:5, maxWidth:"60%"}}  >Hola, Jairo</Text>
+            <Text numberOfLines={1} category='s1'  style={{ fontWeight:"700", marginRight:5, maxWidth:"60%"}}  >Hola, {user.name} </Text>
             <Avatar
               rounded
-              source={{ uri: "https://scontent.fjal3-1.fna.fbcdn.net/v/t39.30808-6/310909154_1529289550839677_3792589022271603293_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=1623lSj-L-0AX9hcRXY&_nc_ht=scontent.fjal3-1.fna&oh=00_AfBntgF4odpFEzwBMWU7-lPPuErkVTduUiU8igDEMkO2QQ&oe=640B6B7E" }}
+              source={{ uri: user?.imageRef }}
             />
           </View>
         </View>

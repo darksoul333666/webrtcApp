@@ -47,7 +47,7 @@ const App = () => {
     <NavigationContainer linking={linking}>
         {/* <StackNavigator name={"Evaluation"}/> */}
         {/* <StackNavigator name={"Home"}/> */}
-        <StackNavigator name={"Therapy"}/>
+        <StackNavigator name={"Login"}/>
         {/* <StackNavigator name={"ContentLibrary"}/> */}
       </NavigationContainer>
       <CodePushLoading />

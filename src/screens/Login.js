@@ -17,14 +17,11 @@ const LoginScreen = ({navigation}) => {
     },[])
     return(
     <View style={{flex:1, marginTop:100}} >
-        {/* <GoogleButtonSignIn
+        <GoogleButtonSignIn
         navigation={navigation}
-        /> */}
-        <Button
-        onPress={() => {
-            se
-        }}
-        >Press</Button>
+
+        />
+        
     </View>
 );
 }

@@ -26,6 +26,8 @@ target 'webrtc' do
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
+
   target 'webrtcTests' do
     inherit! :complete
     # Pods for testing
