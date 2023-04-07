@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { EvaluationScreen, HomeScreen, Therapy } from '../src/screens';
+import { EvaluationScreen, HomeScreen, RedButton, Therapy } from '../src/screens';
 import { LoginScreen } from '../src/screens';
 import { CallScreen } from '../src/screens';
 import { AudioScreen } from '../src/screens/components';
@@ -16,7 +16,7 @@ const StackNavigator = ({name}) => {
   return (
       <Stack.Navigator
       initialRouteName={name}
-      screenOptions={{ headerShown: false }}
+      // screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home"   component={HomeScreen}/>
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -28,6 +28,7 @@ const StackNavigator = ({name}) => {
         <Stack.Screen name="Evaluation" component={EvaluationScreen} />
         <Stack.Screen name="ContentLibrary" component={ContentLibraryScreen} />
         <Stack.Screen name="Therapy" component={Therapy} />
+        <Stack.Screen name="RedButton" component={RedButton} />
 
         {/* <Stack.Screen name="Stripe" component={StripeScreen} />
         <Stack.Screen name="Mercado" component={WebComponent} /> */}

@@ -48,7 +48,7 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.mainBanner}  >
             <Text category='h3' style={styles.textHelp} >¿Necesitas ayuda en este momento?</Text>
           </View>
-            <Button status='basic' style={{ width: 200, margin: 15 }} >Sí, quiero apoyo
+            <Button onPress={() => navigation.navigate('RedButton')} status='basic' style={{ width: 200, margin: 15 }} >Sí, quiero apoyo
             </Button>
             <Button status='primary' style={{ borderRadius: 25, width: 200  }} >
               <Text category='s2'  >No, deseo continuar</Text>

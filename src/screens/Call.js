@@ -35,7 +35,6 @@ const CallScreen = ({ route, navigation }) => {
     .post(ROUTES.GET_IMAGE, JSON.stringify({idUser:id}))
     .then(response =>{
       setImageRef(response.data.data.image);
-      console.log("imagen", response);
     })
   };
 
