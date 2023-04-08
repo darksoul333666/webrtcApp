@@ -228,7 +228,6 @@ const ConnectionP2P = ({
         });
         peerConnection.addEventListener('icecandidateerror', event => {});
         peerConnection.addEventListener('iceconnectionstatechange', event => { 
-            console.log(peerConnection.iceConnectionState);
             if(peerConnection.iceConnectionState === 'disconnected')  destroyMedia();
 
         });
@@ -306,7 +305,7 @@ const ConnectionP2P = ({
           _id: Math.round(Math.random() * 1000000),
           candidate
         })
-        .then(res => console.log(res) )
+        .then(res => console.log("candidate send") )
         .catch(e => {
           console.log('Sorry, this message could not be sent. ', e);
         });
