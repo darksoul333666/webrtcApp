@@ -49,13 +49,15 @@ const ConnectionP2P = ({
         database()
         .ref(`calls/${channelCall}/${sourceRequest}`)
         .on('value', snapshot => {
+            console.log(sourceRequest, snapshot.val());
             if(sourceRequest === 'offer') {
-                console.log(sourceRequest, snapshot.val());
-                sendAnswer(snapshot.val())
-
+                if(snapshot.val() !== undefined){
+                    sendAnswer(snapshot.val())
+                }
             } else {
-                console.log(sourceRequest, snapshot.val());
-                getAnswer(answer);
+                if(snapshot.val() !== undefined){
+                    getAnswer(answer);
+                }
             }
           });
 
