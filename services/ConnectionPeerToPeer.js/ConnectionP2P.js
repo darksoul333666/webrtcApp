@@ -55,11 +55,11 @@ const ConnectionP2P = ({
             console.log(sourceRequest, snapshot.val());
             if(sourceRequest === 'offer') {
                 if(snapshot.val() !== null){
-                    sendAnswer(snapshot.val())
+                    sendAnswer(snapshot.val().offer)
                 }
             } else {
                 if(snapshot.val() !== null){
-                    getAnswer(answer);
+                    getAnswer(snapshot.val().answer);
                 }
             }
           });
@@ -128,6 +128,14 @@ const ConnectionP2P = ({
     }, [microphoneEnabled]);
 
     useEffect(() => {
+        if(isCallerUser){
+         if(!creatingOffer){
+             setCreatingOffer(true);
+         }
+        }
+    },[isCallerUser])
+
+    useEffect(() => {
      hangoutCall ? destroyMedia() : null
     },[hangoutCall]);
 
@@ -137,11 +145,12 @@ const ConnectionP2P = ({
                 if(peerConnection.localDescription == null){
                     const offerDescription = await peerConnection.createOffer(sessionConstraints);
                     await peerConnection.setLocalDescription(offerDescription);
+                    console.log("offerDescription", offerDescription);
                     database()
                     .ref(`calls/${idCall}/offer`)
                     .set({
                       _id: Math.round(Math.random() * 1000000),
-                      answer:answerDescription
+                      offer:offerDescription
                     })
                     .then(res => {} )
                     .catch(e => {
@@ -150,7 +159,7 @@ const ConnectionP2P = ({
                 }
             }
         } catch (err) {
-            Alert.alert("error al crear oferta", JSON.stringify(err));
+           console.log("error al crear oferta", (err));
         };
     };
 
@@ -243,11 +252,6 @@ const ConnectionP2P = ({
 
         });
         peerConnection.addEventListener('negotiationneeded', async event => {
-           if(isCallerUser){
-            if(!creatingOffer){
-                setCreatingOffer(true);
-            }
-           }
         }
         );
         peerConnection.addEventListener('addstream', event => {
