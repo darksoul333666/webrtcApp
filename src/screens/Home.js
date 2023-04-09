@@ -14,20 +14,6 @@ import Styles from '../../utils/theme/Styles';
 import { Container } from './components';
 import { iconPrimary } from '../assets/images/logos';
 const HomeScreen = ({ navigation }) => {
-  useEffect(() => {
-    let idCall = '123456';
-    let typeUser = 'caller';
-    database()
-      .ref(`calls/${idCall}/${typeUser}Candidates`)
-      .on('value', snapshot => {
-        // console.log('User data: ', Object.entries(snapshot?.val()));
-        let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
-        // handleRemoteCandidate(JSON.parse(candidate))
-
-      });
-  }, []);
-  
-
   return (
       <Container image={backgroundLogin} >
       <StatusBar

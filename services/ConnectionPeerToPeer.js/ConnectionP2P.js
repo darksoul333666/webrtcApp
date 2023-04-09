@@ -16,7 +16,6 @@ const ConnectionP2P = ({
     isCallerUser,
     idCallIncoming,
     microphoneEnabled,
-    speakerEnabled,
     hangoutCall,
     navigation,
     idCall,
@@ -32,22 +31,28 @@ const ConnectionP2P = ({
     //         }
     //     ]
     // };
-
     const [localMediaStream, setLocalMediaStream] = useState(null);
     const [remoteMediaStream, setRemoteMediaStream] = useState(null);
     const [creatingOffer, setCreatingOffer] = useState(false);
-     const [peerConnection, setPeerConnection] = useState(new RTCPeerConnection(peerConstraints));
+    const [peerConnection, setPeerConnection] = useState(new RTCPeerConnection(peerConstraints));
 
      useEffect(() => {
-        let idCall='123456';
-        let typeUser='caller';
+        let channelUser = isCallerUser ? 'assistant' : 'caller';
+        let channelCall = isCallerUser ? idCall : idCallIncoming;
+        let sourceRequest = isCallerUser ? 'answer' : 'offer';
         database()
-        .ref(`calls/${idCall}/${typeUser}Candidates`)
+        .ref(`calls/${channelCall}/${channelUser}Candidates`)
         .on('value', snapshot => {
-        console.log('User data: ', snapshot?.val());
-        handleRemoteCandidate(JSON.parse(snapshot?.val()))
+        let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
+        console.log('line 48', candidate);
+        handleRemoteCandidate(candidate)
+        });
+        database()
+        .ref(`calls/${channelCall}/${sourceRequest}`)
+        .on('value', snapshot => {
+            console.log(sourceRequest, snapshot.val());
+          });
 
-      });
       }, []);
 
     useEffect(() => {   
@@ -68,20 +73,11 @@ const ConnectionP2P = ({
     useEffect(() => {
         const handleRemoteMessages = () => {
             messaging().onMessage(async (message) => {
-
-                switch (message.data.type) {
-                    case "answer":
-                        getAnswer(message.data.idCall)
-                        break;
-                    case "offer":
-                        getOffer(message.data.idCall);
-                        break;
-                    case "finalizeCall":
+                if(message.data.type === finalizeCall) {
                         if(message.data.idCall === idCallIncoming 
                         || message.data.idCall === idCall){
                             destroyMedia()
                         }
-                        break;
                 }
             })
         }
@@ -122,53 +118,11 @@ const ConnectionP2P = ({
 
     useEffect(() => {
      hangoutCall ? destroyMedia() : null
-    },[hangoutCall])
+    },[hangoutCall]);
 
-    const getAnswer = async (_idCall) => {
-        try {
-            if(peerConnection.remoteDescription == null){
-                (await API())
-                .post(ROUTES.GET_ANSWER, JSON.stringify({idCall:_idCall}))
-                .then(async response =>{
-                    const remoteDesc = new RTCSessionDescription(response.data.data.answer);
-                        await peerConnection.setRemoteDescription(remoteDesc);
-                        peerConnection.ontrack = (event) => {
-                            event.streams[0].getTracks().forEach((track) => {
-                                localMediaStream.addTrack(event.streams[0]);
-                            });
-                        };
-
-                })
-                .catch(error =>{
-                    Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
-
-                });
-            }
-        } catch (error) {
-            Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
-        }
-    };
-
-    const sendAnswer = async (_idCall) => {
-        try {
-            if(peerConnection.localDescription == null ){
-                const answerDescription = await peerConnection.createAnswer(sessionConstraints);
-                await peerConnection.setLocalDescription(answerDescription);
-                processCandidates();
-            try {
-                (await API()).
-                    post(ROUTES.SEND_ANSWER, JSON.stringify({answer:answerDescription, idCall:_idCall}))
-                    .catch(error => {
-                        console.log(error);
-                    })
-            } catch (error) {
-                Alert.alert("Servidor FALLÓ al enviar respuesta", JSON.stringify(error))
-            }
-            };
-        } catch (err) {
-            Alert.alert("ERROR al enviar respuesta", JSON.stringify(err))
-        };
-    };
+    useEffect(() => {
+        if(!isCallerUser) sendAnswer();
+    },[isCallerUser]);
 
     const createOffer = async () => {
         try {
@@ -176,12 +130,16 @@ const ConnectionP2P = ({
                 if(peerConnection.localDescription == null){
                     const offerDescription = await peerConnection.createOffer(sessionConstraints);
                     await peerConnection.setLocalDescription(offerDescription);
-                    (await API()).
-                        post(ROUTES.SEND_OFFER, JSON.stringify({offer:offerDescription, idCall}))
-                        .catch( error => {
-                                Alert.alert("axios", JSON.stringify(error));
-                            }
-                        )
+                    database()
+                    .ref(`calls/${idCall}/offer`)
+                    .set({
+                      _id: Math.round(Math.random() * 1000000),
+                      answer:answerDescription
+                    })
+                    .then(res => console.log("candidate send") )
+                    .catch(e => {
+                      console.log('Sorry, this message could not be sent. ', e);
+                    });
                 }
             }
         } catch (err) {
@@ -189,34 +147,82 @@ const ConnectionP2P = ({
         };
     };
 
-    const getOffer = async (idCall) => {
+    const sendAnswer = async () => {
         try {
-            if(peerConnection.remoteDescription == null){
-                (await API())
-                .post(ROUTES.GET_OFFER, JSON.stringify({idCall}))
-                .then(async response =>{
-                     if(response.data.success){
-                         try {
-                             const offerDescription = new RTCSessionDescription(response.data.data.offer);
-                             await peerConnection.setRemoteDescription(offerDescription);
-                             sendAnswer(response.data.data.idCall)
-                         } catch (error) {
-                             Alert.alert("falló al traer oferta", JSON.stringify(error))
-     
-                         }
-                       
-                     }
+            if(peerConnection.localDescription == null ){
+                const answerDescription = await peerConnection.createAnswer(sessionConstraints);
+                await peerConnection.setLocalDescription(answerDescription);
+                processCandidates();
+                database()
+                .ref(`calls/${idCallIncoming}/answer`)
+                .set({
+                  _id: Math.round(Math.random() * 1000000),
+                  answer:answerDescription
                 })
-                .catch(error => {
-                 Alert.alert("falló al traer oferta", JSON.stringify(error))
-     
+                .then(res => console.log("candidate send") )
+                .catch(e => {
+                  console.log('Sorry, this message could not be sent. ', e);
                 });
-            }
-        } catch (error) {
-            Alert.alert("falló al traer oferta", (error))
 
-        }
+            };
+        } catch (err) {
+            Alert.alert("ERROR al enviar respuesta", JSON.stringify(err))
+        };
     };
+
+    // const getAnswer = async (_idCall) => {
+    //     try {
+    //         if(peerConnection.remoteDescription == null){
+    //             (await API())
+    //             .post(ROUTES.GET_ANSWER, JSON.stringify({idCall:_idCall}))
+    //             .then(async response =>{
+    //                 const remoteDesc = new RTCSessionDescription(response.data.data.answer);
+    //                     await peerConnection.setRemoteDescription(remoteDesc);
+    //                     peerConnection.ontrack = (event) => {
+    //                         event.streams[0].getTracks().forEach((track) => {
+    //                             localMediaStream.addTrack(event.streams[0]);
+    //                         });
+    //                     };
+
+    //             })
+    //             .catch(error =>{
+    //                 Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
+
+    //             });
+    //         }
+    //     } catch (error) {
+    //         Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
+    //     }
+    // };
+
+    // const getOffer = async (idCall) => {
+    //     try {
+    //         if(peerConnection.remoteDescription == null){
+    //             (await API())
+    //             .post(ROUTES.GET_OFFER, JSON.stringify({idCall}))
+    //             .then(async response =>{
+    //                  if(response.data.success){
+    //                      try {
+    //                          const offerDescription = new RTCSessionDescription(response.data.data.offer);
+    //                          await peerConnection.setRemoteDescription(offerDescription);
+    //                          sendAnswer(response.data.data.idCall)
+    //                      } catch (error) {
+    //                          Alert.alert("falló al traer oferta", JSON.stringify(error))
+     
+    //                      }
+                       
+    //                  }
+    //             })
+    //             .catch(error => {
+    //              Alert.alert("falló al traer oferta", JSON.stringify(error))
+     
+    //             });
+    //         }
+    //     } catch (error) {
+    //         Alert.alert("falló al traer oferta", (error))
+
+    //     }
+    // };
 
     const createPeerConnection = async() => {
         peerConnection.addEventListener('connectionstatechange', event => {
@@ -224,6 +230,7 @@ const ConnectionP2P = ({
          });
         peerConnection.addEventListener('icecandidate', async event => {
             if (!event.candidate) { return; };
+            handleRemoteCandidate(event.candidate);
             sendCandidates(event.candidate);    
         });
         peerConnection.addEventListener('icecandidateerror', event => {});
@@ -297,10 +304,10 @@ const ConnectionP2P = ({
     };
 
     const sendCandidates = (candidate) => {
-        let idCall='123456';
-        let typeUser='caller';
+        let channelUser = isCallerUser ? 'caller' : 'assistant';
+        let channelCall = isCallerUser ? idCall : idCallIncoming;
         database()
-        .ref(`calls/${idCall}/${typeUser}Candidates`)
+        .ref(`calls/${channelCall}/${channelUser}Candidates`)
         .push({
           _id: Math.round(Math.random() * 1000000),
           candidate
