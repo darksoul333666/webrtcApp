@@ -177,8 +177,6 @@ const CallScreen = ({ route, navigation }) => {
       <Text style={{color:"white", alignSelf:'center'}} >Conectando...</Text>}
       </View>
       <View>
-      {(connectedCall)
-           && 
            <ConnectionP2P
             type={"caller"}
             isCallerUser={isCallerUser}
@@ -188,7 +186,7 @@ const CallScreen = ({ route, navigation }) => {
             hangoutCall={hangoutCall}
             navigation={navigation}
             idCall={idCallStarting}
-          />}
+          />
         { (!connectedCall && !isCallerUser) ? renderTabCallIncoming() :  renderTabCallInProgress()}
       </View>
       </View>
