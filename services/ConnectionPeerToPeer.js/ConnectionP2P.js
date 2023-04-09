@@ -43,8 +43,9 @@ const ConnectionP2P = ({
         database()
         .ref(`calls/${channelCall}/${channelUser}Candidates`)
         .on('value', snapshot => {
-            if(snapshot?.val() !== undefined){
-                let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
+            console.log(snapshot.val())
+            if(snapshot?.val() !== null){
+                 let candidate = Object.entries(snapshot?.val()).map(e => (e[1].candidate))
                 handleRemoteCandidate(candidate)                
             }
         });
@@ -53,11 +54,11 @@ const ConnectionP2P = ({
         .on('value', snapshot => {
             console.log(sourceRequest, snapshot.val());
             if(sourceRequest === 'offer') {
-                if(snapshot.val() !== undefined){
+                if(snapshot.val() !== null){
                     sendAnswer(snapshot.val())
                 }
             } else {
-                if(snapshot.val() !== undefined){
+                if(snapshot.val() !== null){
                     getAnswer(answer);
                 }
             }
@@ -157,6 +158,8 @@ const ConnectionP2P = ({
         try {
             if(peerConnection.localDescription == null ){
 
+                console.log(offer)
+
                 const offerDescription = new RTCSessionDescription( offer );
 	            await peerConnection.setRemoteDescription( offerDescription );
 
@@ -176,7 +179,7 @@ const ConnectionP2P = ({
 
             };
         } catch (err) {
-            Alert.alert("ERROR al enviar respuesta", JSON.stringify(err))
+            console.log("ERROR al enviar respuesta", err)
         };
     };
 
