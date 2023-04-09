@@ -43,8 +43,10 @@ const ConnectionP2P = ({
         database()
         .ref(`calls/${channelCall}/${channelUser}Candidates`)
         .on('value', snapshot => {
-        let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
-        handleRemoteCandidate(candidate)
+            if(snapshot?.val() !== undefined){
+                let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
+                handleRemoteCandidate(candidate)                
+            }
         });
         database()
         .ref(`calls/${channelCall}/${sourceRequest}`)
