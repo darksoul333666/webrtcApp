@@ -91,7 +91,7 @@ const CallScreen = ({ route, navigation }) => {
            <Avatar
               size={72}
               rounded
-              icon={{ name: isSpeakerOn ? 'volume-up' : 'volume-down', type: 'font-awesome-5' }}
+              // icon={{ name: isSpeakerOn ? 'volume-up' : 'volume-down', type: 'font-awesome-5' }}
               containerStyle={{
                 opacity: isSpeakerOn  ? 1 : .5
               }}
@@ -104,7 +104,7 @@ const CallScreen = ({ route, navigation }) => {
             <Avatar
               size={72}
               rounded
-              icon={{ name: 'phone', type: 'font-awesome-5', color:'white' }}
+              // icon={{ name: 'phone', type: 'font-awesome-5', color:'white' }}
               containerStyle={{
                 backgroundColor: '#DA1717'
               }}
@@ -116,7 +116,7 @@ const CallScreen = ({ route, navigation }) => {
             <Avatar
               size={72}
               rounded
-              icon={{ name: isMicrophoneOn ? 'microphone' : 'microphone-slash', type: 'font-awesome-5' }}
+              // icon={{ name: isMicrophoneOn ? 'microphone' : 'microphone-slash', type: 'font-awesome-5' }}
               containerStyle={{
                 opacity: isMicrophoneOn ? 1 : .5
               }}
@@ -136,7 +136,7 @@ const CallScreen = ({ route, navigation }) => {
             <Avatar
               size={72}
               rounded
-              icon={{ name: 'phone-slash', type: 'font-awesome-5', color:'white' }}
+              // icon={{ name: 'phone-slash', type: 'font-awesome-5', color:'white' }}
               containerStyle={{
                 backgroundColor: '#DA1717'
               }}
@@ -152,7 +152,7 @@ const CallScreen = ({ route, navigation }) => {
             <Avatar
               size={72}
               rounded
-              icon={{ name: 'phone-alt', type: 'font-awesome-5', color:'white' }}
+              // icon={{ name: 'phone-alt', type: 'font-awesome-5', color:'white' }}
               containerStyle={{
                 backgroundColor: 'green'
               }}

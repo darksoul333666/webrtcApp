@@ -43,7 +43,7 @@ const ConnectionP2P = ({
         database()
         .ref(`calls/${channelCall}/${channelUser}Candidates`)
         .on('value', snapshot => {
-            console.log(snapshot.val())
+            console.log("candidates ",snapshot.val())
             if(snapshot?.val() !== null){
                  let candidate = Object.entries(snapshot?.val()).map(e => (e[1].candidate))
                 handleRemoteCandidate(candidate)                
@@ -127,13 +127,13 @@ const ConnectionP2P = ({
       localMediaStream !== null ? handleMicrophone() : null;
     }, [microphoneEnabled]);
 
-    useEffect(() => {
-        if(isCallerUser){
-         if(!creatingOffer){
-             setCreatingOffer(true);
-         }
-        }
-    },[isCallerUser])
+    // useEffect(() => {
+    //     if(isCallerUser){
+    //      if(!creatingOffer){
+    //          setCreatingOffer(true);
+    //      }
+    //     }
+    // },[isCallerUser])
 
     useEffect(() => {
      hangoutCall ? destroyMedia() : null
@@ -166,12 +166,8 @@ const ConnectionP2P = ({
     const sendAnswer = async (offer) => {
         try {
             if(peerConnection.localDescription == null ){
-
-                console.log(offer)
-
                 const offerDescription = new RTCSessionDescription( offer );
 	            await peerConnection.setRemoteDescription( offerDescription );
-
                 const answerDescription = await peerConnection.createAnswer(sessionConstraints);
                 await peerConnection.setLocalDescription(answerDescription);
                 processCandidates();
@@ -181,7 +177,7 @@ const ConnectionP2P = ({
                   _id: Math.round(Math.random() * 1000000),
                   answer:answerDescription
                 })
-                .then(res => console.log("candidate send") )
+                .then(res => console.log("answer send") )
                 .catch(e => {
                   console.log('Sorry, this message could not be sent. ', e);
                 });
@@ -237,30 +233,42 @@ const ConnectionP2P = ({
     //     }
     // };
 
-    const createPeerConnection = async() => {
-        peerConnection.addEventListener('connectionstatechange', event => {
-        if(event === 'failed')  destroyMedia();
-         });
-        peerConnection.addEventListener('icecandidate', async event => {
-            if (!event.candidate) { return; };
-            handleRemoteCandidate(event.candidate);
-            sendCandidates(event.candidate);    
-        });
-        peerConnection.addEventListener('icecandidateerror', event => {});
-        peerConnection.addEventListener('iceconnectionstatechange', event => { 
-            if(peerConnection.iceConnectionState === 'disconnected')  destroyMedia();
-
-        });
-        peerConnection.addEventListener('negotiationneeded', async event => {
-        }
-        );
-        peerConnection.addEventListener('addstream', event => {
-            setRemoteMediaStream(event.stream);
-        });
-        peerConnection.addEventListener('signalingstatechange', event => { });
-        peerConnection.addEventListener('removestream', event => { });
-        peerConnection.addEventListener("icegatheringstatechange", async (ev) => { });
-        createDataChanel()
+    const createPeerConnection = () => {
+        createDataChanel();
+        console.log("adoasjodkapodkaopkdpoawkdpowak");
+            peerConnection.addEventListener('connectionstatechange', event => {
+                console.log("connectionstatechange", event);
+            if(event === 'failed')  destroyMedia();
+             });
+            peerConnection.addEventListener('icecandidate',  event => {
+                console.log("icecandidate", event);
+    
+                if (!event.candidate) { return; };
+                handleRemoteCandidate(event.candidate);
+                sendCandidates(event.candidate);    
+            });
+            peerConnection.addEventListener('icecandidateerror', event => {
+                console.log("icecandidateerror ",event);
+            });
+            peerConnection.addEventListener('iceconnectionstatechange', event => { 
+                console.log(peerConnection.iceConnectionState);
+                if(peerConnection.iceConnectionState === 'disconnected')  destroyMedia();
+    
+            });
+            peerConnection.addEventListener('negotiationneeded', async event => {
+                console.log("negotiationneeded", event);
+            }
+            );
+            peerConnection.addEventListener('addstream', event => {
+                setRemoteMediaStream(event.stream);
+            });
+            peerConnection.addEventListener('signalingstatechange', event => { 
+                console.log("signalingstatechange", event );
+            });
+            peerConnection.addEventListener('removestream', event => { });
+            peerConnection.addEventListener("icegatheringstatechange",  (ev) => { 
+                console.log("icegatheringstatechange", ev);
+            });
     };
 
     const createDataChanel = () => {
@@ -320,7 +328,7 @@ const ConnectionP2P = ({
           _id: Math.round(Math.random() * 1000000),
           candidate
         })
-        .then(res =>{} )
+        .then(res =>{ console.log("candidatos enviados"); } )
         .catch(e => {
           console.log('Sorry, this message could not be sent. ', e);
         });
