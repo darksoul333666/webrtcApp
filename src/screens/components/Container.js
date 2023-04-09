@@ -29,7 +29,6 @@ const ContainerComponent = ({
   useEffect(() => {
     const getData = async() => {
       setUser(await CacheUtil.getUser());
-      console.log(await CacheUtil.getUser());
     }
     getData()
   },[])
@@ -37,7 +36,6 @@ const ContainerComponent = ({
   useEffect(() => {
     getData = async () => {
       setUser(await CacheUtil.getUser())
-      console.log(await CacheUtil.getUser());
     };
     getData()
   }, [])

@@ -44,13 +44,19 @@ const ConnectionP2P = ({
         .ref(`calls/${channelCall}/${channelUser}Candidates`)
         .on('value', snapshot => {
         let candidate = Object.entries(snapshot?.val()).forEach(e => console.log(e[1].candidate))
-        console.log('line 48', candidate);
         handleRemoteCandidate(candidate)
         });
         database()
         .ref(`calls/${channelCall}/${sourceRequest}`)
         .on('value', snapshot => {
-            console.log(sourceRequest, snapshot.val());
+            if(sourceRequest === 'offer') {
+                console.log(sourceRequest, snapshot.val());
+                sendAnswer(snapshot.val())
+
+            } else {
+                console.log(sourceRequest, snapshot.val());
+                getAnswer(answer);
+            }
           });
 
       }, []);
@@ -120,10 +126,6 @@ const ConnectionP2P = ({
      hangoutCall ? destroyMedia() : null
     },[hangoutCall]);
 
-    useEffect(() => {
-        if(!isCallerUser) sendAnswer();
-    },[isCallerUser]);
-
     const createOffer = async () => {
         try {
             if(creatingOffer){
@@ -136,7 +138,7 @@ const ConnectionP2P = ({
                       _id: Math.round(Math.random() * 1000000),
                       answer:answerDescription
                     })
-                    .then(res => console.log("candidate send") )
+                    .then(res => {} )
                     .catch(e => {
                       console.log('Sorry, this message could not be sent. ', e);
                     });
@@ -147,9 +149,13 @@ const ConnectionP2P = ({
         };
     };
 
-    const sendAnswer = async () => {
+    const sendAnswer = async (offer) => {
         try {
             if(peerConnection.localDescription == null ){
+
+                const offerDescription = new RTCSessionDescription( offer );
+	            await peerConnection.setRemoteDescription( offerDescription );
+
                 const answerDescription = await peerConnection.createAnswer(sessionConstraints);
                 await peerConnection.setLocalDescription(answerDescription);
                 processCandidates();
@@ -170,30 +176,21 @@ const ConnectionP2P = ({
         };
     };
 
-    // const getAnswer = async (_idCall) => {
-    //     try {
-    //         if(peerConnection.remoteDescription == null){
-    //             (await API())
-    //             .post(ROUTES.GET_ANSWER, JSON.stringify({idCall:_idCall}))
-    //             .then(async response =>{
-    //                 const remoteDesc = new RTCSessionDescription(response.data.data.answer);
-    //                     await peerConnection.setRemoteDescription(remoteDesc);
-    //                     peerConnection.ontrack = (event) => {
-    //                         event.streams[0].getTracks().forEach((track) => {
-    //                             localMediaStream.addTrack(event.streams[0]);
-    //                         });
-    //                     };
-
-    //             })
-    //             .catch(error =>{
-    //                 Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
-
-    //             });
-    //         }
-    //     } catch (error) {
-    //         Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
-    //     }
-    // };
+    const getAnswer = async (answer) => {
+        try {
+            if(peerConnection.remoteDescription == null){               
+                const remoteDesc = new RTCSessionDescription(answer);
+                await peerConnection.setRemoteDescription(remoteDesc);
+                peerConnection.ontrack = (event) => {
+                event.streams[0].getTracks().forEach((track) => {
+                localMediaStream.addTrack(event.streams[0]);
+                });
+            };
+        }
+        } catch (error) {
+            Alert.alert("ERROR al traer respuesta", JSON.stringify(error))
+        }
+    };
 
     // const getOffer = async (idCall) => {
     //     try {
@@ -312,7 +309,7 @@ const ConnectionP2P = ({
           _id: Math.round(Math.random() * 1000000),
           candidate
         })
-        .then(res => console.log("candidate send") )
+        .then(res =>{} )
         .catch(e => {
           console.log('Sorry, this message could not be sent. ', e);
         });

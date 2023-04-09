@@ -72,7 +72,6 @@ const CallScreen = ({ route, navigation }) => {
       idCall: idCallIncoming,
       idUserAssistant: user.idUser,
   };
-  console.log("response de llamada", data);
   (await API()).
       post(ROUTES.RESPONSE_CALL, JSON.stringify(data)).
       then(async(response) => {

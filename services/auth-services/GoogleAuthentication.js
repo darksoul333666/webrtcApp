@@ -16,7 +16,6 @@ const GoogleButtonSignIn = ({navigation}) => {
           const userGoogle = await GoogleSignin.signIn();
           const userInfo = userGoogle.user;
           let token = await messaging().getToken();
-          console.log("datos de usuario", userInfo );
           let user = {
             idUser: userInfo.id,
             name: userInfo.name,

@@ -21,10 +21,7 @@ import { URL_API, API } from '../../../../api';
       (await API()).
       post(URL_API+'user/create_intent', JSON.stringify({  paymentMethodPay: 'card', currency: 'usd'}))
       .then(async res => {
-        console.log("despues");
-        const {clientSecret} = await res.data.data;
-        console.log("clientSecret", clientSecret);
-  
+        const {clientSecret} = await res.data.data;  
         const {error, paymentIntent} = await confirmPayment(clientSecret.client_secret,
           {
             type:'Card',
@@ -65,15 +62,12 @@ import { URL_API, API } from '../../../../api';
         marginVertical: 30,
       }}
       onCardChange={(cardDetails) => {
-        console.log('cardDetails', cardDetails);
       }}
       onFocus={(focusedField) => {
-        console.log('focusField', focusedField);
       }}
     />
       <Button title='Pagar' disabled={loading} onPress={() =>  {
         handlePayPress()
-        console.log("daasdas");
         }} />
     </View>
    
